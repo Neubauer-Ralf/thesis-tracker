@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teresa's Thesis Tracker</title>
+<title>PhD Thesis Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -30,7 +30,6 @@ input,select{font-family:inherit}
 .hdr-title{font-size:clamp(1.7rem,4.5vw,2.8rem);font-weight:600;line-height:1.2;margin-bottom:10px}
 .hdr-author{font-size:1.1rem;font-style:italic;color:var(--muted)}
 
-/* SYNC STATUS */
 .sync-status{display:inline-flex;align-items:center;gap:5px;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin-top:10px;font-weight:500}
 .sync-status.cloud{color:var(--green);background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2)}
 .sync-status.local{color:var(--muted);background:var(--bg2);border:1px solid var(--border)}
@@ -139,7 +138,7 @@ input,select{font-family:inherit}
 .fl{display:block;font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .fi{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:.86rem;outline:none;transition:border-color .2s}
 .fi:focus{border-color:var(--gold)}
-.fi.mono{font-family:monospace;font-size:.78rem;letter-spacing:.04em}
+.fi.mono{font-family:monospace;font-size:.78rem;letter-spacing:.02em}
 .sdiv{font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px;display:flex;align-items:center;gap:8px}
 .sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
 .sdivnote{font-size:.7rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
@@ -161,11 +160,10 @@ input,select{font-family:inherit}
 .fignameitem input{flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:.8rem;outline:none}
 .fignameitem input:focus{border-color:var(--gold)}
 
-/* Cloud sync section in admin */
-.cloud-status-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 12px;border-radius:8px;font-size:.78rem}
-.cloud-status-row.ok{background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);color:var(--green)}
-.cloud-status-row.none{background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
-.cloud-status-row.err{background:rgba(139,26,47,.06);border:1px solid rgba(139,26,47,.2);color:var(--accent)}
+.cloud-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 12px;border-radius:8px;font-size:.78rem}
+.cloud-row.ok{background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);color:var(--green)}
+.cloud-row.none{background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
+.cloud-row.err{background:rgba(139,26,47,.06);border:1px solid rgba(139,26,47,.2);color:var(--accent)}
 .syncbtn{flex:none;padding:5px 12px;border-radius:6px;border:1px solid currentColor;background:none;font-size:.72rem;font-weight:500;color:inherit;transition:opacity .2s}
 .syncbtn:hover{opacity:.7}
 
@@ -183,9 +181,7 @@ input,select{font-family:inherit}
 .pingo:hover{opacity:.88}
 .canclink{background:none;border:none;color:var(--muted);font-size:.74rem;text-decoration:underline;margin-top:2px}
 
-/* Loading screen */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:14px;color:var(--muted)}
-.loading-title{font-size:1.4rem;font-style:italic}
 .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -208,17 +204,16 @@ input,select{font-family:inherit}
 <script>
 'use strict';
 
-// ─── Storage keys ─────────────────────────────────────────────────────────
-const SK      = 'thesis-tracker-v2';
-const KEY_SK  = 'thesis-tracker-apikey';
-const BIN_SK  = 'thesis-tracker-binid';
+const SK     = 'thesis-tracker-v2';
+const KEY_SK = 'thesis-tracker-apikey';
+const BIN_SK = 'thesis-tracker-binid';
 
-// ─── Constants ────────────────────────────────────────────────────────────
 const MILESTONES = [
   {pct:10,e:'🌱',l:'First words'},{pct:25,e:'✍️',l:'Quarter done'},
   {pct:50,e:'⭐',l:'Halfway!'},{pct:75,e:'🔥',l:'Three-quarters'},
   {pct:90,e:'🚀',l:'Almost there'},{pct:100,e:'🎓',l:'Done!'},
 ];
+
 const DEFAULT = {
   thesisTitle:'My PhD Thesis',authorName:'Scholar',adminPin:'1234',
   chapters:[
@@ -232,23 +227,17 @@ const DEFAULT = {
   sessions:[],figureTarget:0,figures:[],lastUpdated:null,
 };
 
-// ─── Cloud credentials (never in git, only in localStorage) ───────────────
-let apiKey = localStorage.getItem(KEY_SK) || '';
-let binId  = localStorage.getItem(BIN_SK) || '';
-let syncState = apiKey ? 'cloud' : 'local'; // 'cloud'|'local'|'syncing'|'error'
+// Credentials — never in git, only in localStorage
+let apiKey   = localStorage.getItem(KEY_SK) || '';
+let binId    = localStorage.getItem(BIN_SK) || '';
+let syncState = 'local';
 
-// ─── App state ────────────────────────────────────────────────────────────
 let state = migrate((() => {
-  try {
-    const s = localStorage.getItem(SK);
-    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT));
-  } catch { return JSON.parse(JSON.stringify(DEFAULT)); }
+  try { const s = localStorage.getItem(SK); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT)); }
+  catch { return JSON.parse(JSON.stringify(DEFAULT)); }
 })());
 
-let ui = {
-  adminOpen:false, authed:!!sessionStorage.getItem('thesis-authed'),
-  pinErr:false, logWords:'', logChapterId:'', logDate:todayStr(),
-};
+let ui = { adminOpen:false, authed:!!sessionStorage.getItem('thesis-authed'), pinErr:false, logWords:'', logChapterId:'', logDate:todayStr() };
 let editState = null;
 
 function migrate(s) {
@@ -257,44 +246,39 @@ function migrate(s) {
   return s;
 }
 
-// ─── JSONBin API ──────────────────────────────────────────────────────────
+// ─── JSONBin ──────────────────────────────────────────────────────────────
 async function jbRead() {
   if (!apiKey || !binId) return null;
   try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-      headers: {'X-Master-Key': apiKey}
-    });
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers:{'X-Master-Key':apiKey} });
     if (!r.ok) return null;
-    const d = await r.json();
-    return d.record || null;
+    return (await r.json()).record || null;
   } catch { return null; }
 }
 
 async function jbWrite(data) {
-  if (!apiKey) return false;
+  if (!apiKey || !binId) return false;
   try {
-    if (!binId) {
-      // Create new bin
-      const r = await fetch('https://api.jsonbin.io/v3/b', {
-        method:'POST',
-        headers:{'Content-Type':'application/json','X-Master-Key':apiKey,'X-Bin-Name':'thesis-tracker','X-Private':'true'},
-        body: JSON.stringify(data),
-      });
-      if (!r.ok) return false;
-      const d = await r.json();
-      binId = d.metadata.id;
-      localStorage.setItem(BIN_SK, binId);
-      return true;
-    } else {
-      // Update existing bin
-      const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-        method:'PUT',
-        headers:{'Content-Type':'application/json','X-Master-Key':apiKey},
-        body: JSON.stringify(data),
-      });
-      return r.ok;
-    }
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':apiKey},
+      body: JSON.stringify(data),
+    });
+    return r.ok;
   } catch { return false; }
+}
+
+async function jbCreate(data) {
+  if (!apiKey) return null;
+  try {
+    const r = await fetch('https://api.jsonbin.io/v3/b', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Master-Key':apiKey,'X-Bin-Name':'thesis-tracker','X-Private':'true'},
+      body: JSON.stringify(data),
+    });
+    if (!r.ok) return null;
+    return (await r.json()).metadata.id;
+  } catch { return null; }
 }
 
 // ─── Persist ──────────────────────────────────────────────────────────────
@@ -303,34 +287,22 @@ function persistLocal() {
 }
 
 function persistRemote() {
-  if (!apiKey) return;
-  syncState = 'syncing';
-  jbWrite(state).then(ok => {
-    syncState = ok ? 'cloud' : 'error';
-    updateSyncBadge();
-  });
+  if (!apiKey || !binId) return;
+  syncState = 'syncing'; updateSyncBadge();
+  jbWrite(state).then(ok => { syncState = ok ? 'cloud' : 'error'; updateSyncBadge(); });
 }
 
-function persist() {
-  persistLocal();
-  persistRemote();
-}
+function persist() { persistLocal(); persistRemote(); }
 
 function updateSyncBadge() {
   const el = document.getElementById('sync-badge');
   if (!el) return;
-  const map = {
-    cloud:   {cls:'cloud',   txt:'☁ Synced'},
-    local:   {cls:'local',   txt:'○ Local only'},
-    syncing: {cls:'syncing', txt:'↻ Syncing…'},
-    error:   {cls:'error',   txt:'⚠ Sync failed'},
-  };
+  const map = { cloud:{cls:'cloud',txt:'☁ Synced'}, local:{cls:'local',txt:'○ Local only'}, syncing:{cls:'syncing',txt:'↻ Syncing…'}, error:{cls:'error',txt:'⚠ Sync failed'} };
   const{cls,txt} = map[syncState] || map.local;
-  el.className = `sync-status ${cls}`;
-  el.textContent = txt;
+  el.className = `sync-status ${cls}`; el.textContent = txt;
 }
 
-// ─── Date helpers ─────────────────────────────────────────────────────────
+// ─── Dates ────────────────────────────────────────────────────────────────
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function daysAgoStr(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
 function fmtDateLong(s){return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});}
@@ -339,121 +311,65 @@ function fmtProjected(d){const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Au
 
 // ─── Computed ─────────────────────────────────────────────────────────────
 function chCurrent(ch){return(ch.base||0)+(state.sessions||[]).filter(s=>s.chapterId===ch.id).reduce((s,x)=>s+x.words,0);}
-function totals(){
-  const cur=state.chapters.reduce((s,c)=>s+chCurrent(c),0);
-  const tgt=state.chapters.reduce((s,c)=>s+(c.target||0),0);
-  return{current:cur,target:tgt,pct:tgt>0?Math.min(100,Math.round(cur/tgt*100)):0};
-}
-function figTotals(){
-  const total=state.figureTarget||0;
-  const done=(state.figures||[]).filter(f=>f.done).length;
-  return{total,done,pct:total>0?Math.round(done/total*100):0};
-}
+function totals(){const cur=state.chapters.reduce((s,c)=>s+chCurrent(c),0),tgt=state.chapters.reduce((s,c)=>s+(c.target||0),0);return{current:cur,target:tgt,pct:tgt>0?Math.min(100,Math.round(cur/tgt*100)):0};}
+function figTotals(){const total=state.figureTarget||0,done=(state.figures||[]).filter(f=>f.done).length;return{total,done,pct:total>0?Math.round(done/total*100):0};}
+
 function computeStats(){
-  const ss=state.sessions||[];
-  const today=todayStr();
+  const ss=state.sessions||[],today=todayStr();
   const todayWords=ss.filter(s=>s.date===today).reduce((s,x)=>s+x.words,0);
   const weekWords=ss.filter(s=>s.date>=daysAgoStr(6)).reduce((s,x)=>s+x.words,0);
-  function streak(){
-    if(!ss.length)return 0;
-    const days=new Set(ss.map(s=>s.date));
-    const from=days.has(today)?today:daysAgoStr(1);
-    if(!days.has(from))return 0;
-    let n=0;const d=new Date(from+'T12:00:00');
-    while(days.has(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1);}
-    return n;
-  }
-  const rw=ss.filter(s=>s.date>=daysAgoStr(13)).reduce((s,x)=>s+x.words,0);
-  const avg=Math.round(rw/14);
-  const best=ss.reduce((m,s)=>Math.max(m,s.words),0);
-  const{current,target}=totals();
-  let projected=null;
+  function streak(){if(!ss.length)return 0;const days=new Set(ss.map(s=>s.date)),from=days.has(today)?today:daysAgoStr(1);if(!days.has(from))return 0;let n=0;const d=new Date(from+'T12:00:00');while(days.has(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1);}return n;}
+  const rw=ss.filter(s=>s.date>=daysAgoStr(13)).reduce((s,x)=>s+x.words,0),avg=Math.round(rw/14),best=ss.reduce((m,s)=>Math.max(m,s.words),0);
+  const{current,target}=totals();let projected=null;
   if(avg>0&&current<target){const d=new Date();d.setDate(d.getDate()+Math.ceil((target-current)/avg));projected=d;}
   return{todayWords,weekWords,streak:streak(),avgPerDay:avg,best,projected};
 }
 
-function motivMsg(pct){
-  const m=[[100,"It is done. Every word hard-won. Every page a testament. 🎓"],[90,"The final stretch before something remarkable is complete."],[70,"The end is in sight. This is where the work becomes legacy."],[50,"Past the halfway point. The finish line is coming into view."],[30,"Something worth reading takes time. Look how far you've come."],[15,"The first steps are always the most important — and you've taken them."],[5,"The blank page is behind you. Something is being built here."],[0,"Every great work begins with a single word. The journey starts now."]];
-  for(const[t,s]of m)if(pct>=t)return s;return m[m.length-1][1];
-}
+function motivMsg(pct){const m=[[100,"It is done. Every word hard-won. Every page a testament. 🎓"],[90,"The final stretch before something remarkable is complete."],[70,"The end is in sight. This is where the work becomes legacy."],[50,"Past the halfway point. The finish line is coming into view."],[30,"Something worth reading takes time. Look how far you've come."],[15,"The first steps are always the most important — and you've taken them."],[5,"The blank page is behind you. Something is being built here."],[0,"Every great work begins with a single word. The journey starts now."]];for(const[t,s]of m)if(pct>=t)return s;return m[m.length-1][1];}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmt(n){return(n||0).toLocaleString('en-GB');}
 
 // ─── Render ───────────────────────────────────────────────────────────────
 function renderHeader(){
-  const syncMap={cloud:'cloud',local:'local',syncing:'syncing',error:'error'};
-  const syncTxt={cloud:'☁ Synced',local:'○ Local only',syncing:'↻ Syncing…',error:'⚠ Sync failed'};
-  return`<header class="hdr">
-  <div class="hdr-orn serif">— ✦ —</div>
-  <div class="hdr-eye">PhD Thesis · Progress Tracker</div>
-  <h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1>
-  <div class="hdr-author serif">${esc(state.authorName)}</div>
-  <div id="sync-badge" class="sync-status ${syncMap[syncState]}">${syncTxt[syncState]}</div>
-  </header>`;
+  const map={cloud:'cloud',local:'local',syncing:'syncing',error:'error'};
+  const txt={cloud:'☁ Synced',local:'○ Local only',syncing:'↻ Syncing…',error:'⚠ Sync failed'};
+  return`<header class="hdr"><div class="hdr-orn serif">— ✦ —</div><div class="hdr-eye">PhD Thesis · Progress Tracker</div><h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1><div class="hdr-author serif">${esc(state.authorName)}</div><div id="sync-badge" class="sync-status ${map[syncState]}">${txt[syncState]}</div></header>`;
 }
 
 function renderStats(s){
-  const{pct}=totals();
-  let pv,pc='';
-  if(pct>=100){pv='🎓 Done!';pc='green';}
-  else if(s.projected){pv=`<span style="font-size:1rem">${fmtProjected(s.projected)}</span>`;pc='green';}
-  else pv='<span style="font-size:.9rem;color:var(--muted)">Keep going</span>';
+  const{pct}=totals();let pv,pc='';
+  if(pct>=100){pv='🎓 Done!';pc='green';}else if(s.projected){pv=`<span style="font-size:1rem">${fmtProjected(s.projected)}</span>`;pc='green';}else pv='<span style="font-size:.9rem;color:var(--muted)">Keep going</span>';
   const sc=s.streak>=14?'fire':s.streak>=7?'gold':'';
-  return`<div class="stats">
-  <div class="scard"><div class="sico">🔥</div><div class="sval ${sc}">${s.streak}</div><div class="slbl">Day streak</div></div>
-  <div class="scard"><div class="sico">✍️</div><div class="sval gold">${fmt(s.todayWords)}</div><div class="slbl">Today</div></div>
-  <div class="scard"><div class="sico">📅</div><div class="sval">${fmt(s.weekWords)}</div><div class="slbl">This week</div></div>
-  <div class="scard"><div class="sico">⚡</div><div class="sval">${s.avgPerDay>0?fmt(s.avgPerDay):'—'}</div><div class="slbl">Avg/day</div></div>
-  <div class="scard"><div class="sico">🏁</div><div class="sval ${pc}">${pv}</div><div class="slbl">Finish estimate</div></div>
-  <div class="scard"><div class="sico">🏆</div><div class="sval">${s.best>0?fmt(s.best):'—'}</div><div class="slbl">Best session</div></div>
-  </div>`;
+  return`<div class="stats"><div class="scard"><div class="sico">🔥</div><div class="sval ${sc}">${s.streak}</div><div class="slbl">Day streak</div></div><div class="scard"><div class="sico">✍️</div><div class="sval gold">${fmt(s.todayWords)}</div><div class="slbl">Today</div></div><div class="scard"><div class="sico">📅</div><div class="sval">${fmt(s.weekWords)}</div><div class="slbl">This week</div></div><div class="scard"><div class="sico">⚡</div><div class="sval">${s.avgPerDay>0?fmt(s.avgPerDay):'—'}</div><div class="slbl">Avg/day</div></div><div class="scard"><div class="sico">🏁</div><div class="sval ${pc}">${pv}</div><div class="slbl">Finish estimate</div></div><div class="scard"><div class="sico">🏆</div><div class="sval">${s.best>0?fmt(s.best):'—'}</div><div class="slbl">Best session</div></div></div>`;
 }
 
 function renderProgress(pct,cur,tgt){return`<div class="mcrd"><div class="phdr"><span class="plbl">Overall Progress</span><span class="ppct serif">${pct}%</span></div><div class="ptrack"><div class="pfill" style="width:${Math.max(0,pct)}%"></div></div><div class="pwords"><span><span class="big">${fmt(cur)}</span> words written</span><span>goal: <strong>${fmt(tgt)}</strong> words</span></div><div class="mrow">${MILESTONES.map(m=>`<div class="ms"><div class="msdot ${pct>=m.pct?'on':''}">${m.e}</div><div class="mslbl">${m.l}</div></div>`).join('')}</div></div>`;}
 
 function renderLogPanel(s){
   const opts=state.chapters.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  return`<div class="logpanel"><div class="logtitle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Log Writing Session</div>
-  <div class="logform">
-    <div class="lf" style="width:100px"><label>Words written</label><input id="lw" type="number" class="lin" placeholder="e.g. 650" min="1" oninput="ui.logWords=this.value" onkeydown="if(event.key==='Enter')doLog()"></div>
-    <div class="lf grow"><label>Chapter</label><select id="lc" class="lsel" onchange="ui.logChapterId=this.value"><option value="">Select…</option>${opts}</select></div>
-    <div class="lf" style="width:140px"><label>Date</label><input id="ld" type="date" class="lin" value="${ui.logDate}" onchange="ui.logDate=this.value"></div>
-    <button class="logbtn" onclick="doLog()">Log ✓</button>
-  </div>
-  ${s.todayWords>0?`<div class="logtoday">Today so far: <strong>${fmt(s.todayWords)}</strong> words</div>`:''}
-  </div>`;
+  return`<div class="logpanel"><div class="logtitle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Log Writing Session</div><div class="logform"><div class="lf" style="width:100px"><label>Words written</label><input id="lw" type="number" class="lin" placeholder="e.g. 650" min="1" oninput="ui.logWords=this.value" onkeydown="if(event.key==='Enter')doLog()"></div><div class="lf grow"><label>Chapter</label><select id="lc" class="lsel" onchange="ui.logChapterId=this.value"><option value="">Select…</option>${opts}</select></div><div class="lf" style="width:140px"><label>Date</label><input id="ld" type="date" class="lin" value="${ui.logDate}" onchange="ui.logDate=this.value"></div><button class="logbtn" onclick="doLog()">Log ✓</button></div>${s.todayWords>0?`<div class="logtoday">Today so far: <strong>${fmt(s.todayWords)}</strong> words</div>`:''}</div>`;
 }
 
 function renderChapters(){return`<div class="chgrid">${state.chapters.map(ch=>{const cur=chCurrent(ch),cp=ch.target>0?Math.min(100,Math.round(cur/ch.target*100)):0,done=cp>=100;return`<div class="chcard ${done?'done':''}"><div class="chname">${esc(ch.name)}</div><div class="chwords">${fmt(cur)} / ${fmt(ch.target)} words</div><div class="chtrack"><div class="chfill ${done?'done':''}" style="width:${cp}%"></div></div><div class="chpct ${done?'done':''}">${done?'✓ Complete':cp+'%'}</div></div>`;}).join('')}</div>`;}
 
 function renderFigures(){
-  const{total,done,pct}=figTotals();
-  if(total===0)return'';
-  const chips=(state.figures||[]).map(f=>{
-    const lbl=f.name?esc(f.name):`Fig. ${f.num}`;
-    const cl=ui.authed?'clickable':'';
-    const oc=ui.authed?`onclick="toggleFigure(${f.id})"`:'';
-    return`<div class="figchip ${f.done?'done':''} ${cl}" ${oc}>${f.done?'✓':'○'} ${lbl}</div>`;
-  }).join('');
+  const{total,done,pct}=figTotals();if(total===0)return'';
+  const chips=(state.figures||[]).map(f=>{const lbl=f.name?esc(f.name):`Fig. ${f.num}`,cl=ui.authed?'clickable':'',oc=ui.authed?`onclick="toggleFigure(${f.id})"`:'';return`<div class="figchip ${f.done?'done':''} ${cl}" ${oc}>${f.done?'✓':'○'} ${lbl}</div>`;}).join('');
   return`<div class="shead serif">Figures</div><div class="figprog"><div class="figbar"><div class="figfill" style="width:${pct}%"></div></div><div class="figcount"><strong>${done}</strong> of ${total} complete</div></div><div class="figgrid">${chips}</div>`;
 }
 
 function renderSessions(){
-  const ss=(state.sessions||[]).slice(0,15);
-  const cm=Object.fromEntries(state.chapters.map(c=>[c.id,c.name]));
-  const today=todayStr();
+  const ss=(state.sessions||[]).slice(0,15),cm=Object.fromEntries(state.chapters.map(c=>[c.id,c.name])),today=todayStr();
   const list=ss.length?ss.map(s=>`<div class="sessitem"><span class="sessdate">${fmtDateShort(s.date)}</span><span class="sesswords">${fmt(s.words)} words</span><span class="sessch">${esc(cm[s.chapterId]||'Chapter')}</span>${s.date===today?'<span class="sessbdg">today</span>':''}${ui.authed?`<button class="sessdel" onclick="delSession(${s.id})" title="Remove">✕</button>`:''}</div>`).join(''):`<div class="nosess">No sessions logged yet — start writing! ✍️</div>`;
   return`<div class="shead serif">Recent Sessions</div><div class="sesslist">${list}</div>`;
 }
 
 function renderAdminPanel(){
-  const ch=editState.chapters||[];
-  const ft=editState.figureTarget||0;
-  const figs=editState.figures||[];
+  const ch=editState.chapters||[],ft=editState.figureTarget||0,figs=editState.figures||[];
   const connected=!!(apiKey&&binId);
   const cloudRow=connected
-    ?`<div class="cloud-status-row ok">☁ Connected<span style="flex:1;font-size:.68rem;margin-left:6px;opacity:.7">Bin: ${binId.slice(0,8)}…</span><button class="syncbtn" onclick="manualSync()">Pull latest</button></div>`
-    :`<div class="cloud-status-row ${apiKey&&!binId?'ok':'none'}">${apiKey&&!binId?'Key set — will create bin on Save':'Not connected — enter API key to enable cloud sync'}</div>`;
+    ?`<div class="cloud-row ok">☁ Connected<span style="flex:1;font-size:.68rem;margin-left:6px;opacity:.7">Bin: ${binId}</span><button class="syncbtn" onclick="manualSync()">Pull latest</button></div>`
+    :`<div class="cloud-row none">Not connected — enter API key and Bin ID below</div>`;
 
   return`<div class="phd"><div class="ptitle serif">Settings</div><button class="xbtn" onclick="closeAdmin()">✕</button></div>
   <div class="fg"><label class="fl">Author Name</label><input id="ae-author" class="fi" value="${esc(editState.authorName)}"></div>
@@ -462,7 +378,9 @@ function renderAdminPanel(){
 
   <div class="sdiv">Cloud Sync</div>
   ${cloudRow}
-  <div class="fg"><label class="fl">JSONBin API Key</label><input id="ae-apikey" class="fi mono" type="password" placeholder="${apiKey?'••••••••• (change to update)':'Paste Master Key from jsonbin.io'}"></div>
+  <p class="sdivnote">Enter both values on every device. The Bin ID ties all devices to the same data. Never put these in the git repo.</p>
+  <div class="fg"><label class="fl">JSONBin API Key</label><input id="ae-apikey" class="fi mono" type="password" placeholder="${apiKey?'set — paste to change':'Paste Master Key from jsonbin.io'}"></div>
+  <div class="fg"><label class="fl">Bin ID</label><input id="ae-binid" class="fi mono" placeholder="${binId?binId:'Paste Bin ID (leave blank to create new)'}"></div>
 
   <div class="sdiv">Chapters</div>
   <p class="sdivnote">"Starting words" = words written before tracking began.</p>
@@ -483,24 +401,8 @@ function renderAdminPanel(){
 function renderPinScreen(){return`<div class="phd"><div class="ptitle serif">Writer Mode</div><button class="xbtn" onclick="closeAdmin()">✕</button></div><div class="pinwrap"><div class="pinsub">Enter your PIN to log sessions and edit settings</div><input id="pin-in" class="pinin" type="password" placeholder="••••" maxlength="8" onkeydown="if(event.key==='Enter')tryPin()">${ui.pinErr?'<div class="pinerr">Incorrect PIN — try again</div>':''}<button class="pingo" onclick="tryPin()">Unlock</button><button class="canclink" onclick="closeAdmin()">Cancel</button><div style="font-size:.68rem;color:var(--muted);margin-top:4px">Default PIN: 1234</div></div>`;}
 
 function render(){
-  const{current,target,pct}=totals();
-  const s=computeStats();
-  document.getElementById('app').innerHTML=`
-  <div class="page">
-    ${renderHeader()}
-    ${renderStats(s)}
-    ${renderProgress(pct,current,target)}
-    <div class="motiv serif">${motivMsg(pct)}</div>
-    ${ui.authed?renderLogPanel(s):`<div class="unlkhint"><button class="unlkbtn" onclick="openAdmin()">✍ Writer Mode</button></div>`}
-    <div class="shead serif">Chapters</div>
-    ${renderChapters()}
-    ${renderFigures()}
-    ${renderSessions()}
-    ${state.lastUpdated?`<p style="text-align:center;font-size:.7rem;color:var(--muted);font-style:italic;margin-top:14px">Last updated: ${fmtDateLong(state.lastUpdated.slice(0,10))}</p>`:''}
-  </div>
-  <button class="fab" onclick="openAdmin()" title="Settings">⚙</button>
-  ${ui.adminOpen?`<div class="overlay" id="ov" onclick="if(event.target.id==='ov')closeAdmin()"><div class="panel">${ui.authed?renderAdminPanel():renderPinScreen()}</div></div>`:''}
-  <div id="cfx"></div>`;
+  const{current,target,pct}=totals(),s=computeStats();
+  document.getElementById('app').innerHTML=`<div class="page">${renderHeader()}${renderStats(s)}${renderProgress(pct,current,target)}<div class="motiv serif">${motivMsg(pct)}</div>${ui.authed?renderLogPanel(s):`<div class="unlkhint"><button class="unlkbtn" onclick="openAdmin()">✍ Writer Mode</button></div>`}<div class="shead serif">Chapters</div>${renderChapters()}${renderFigures()}${renderSessions()}${state.lastUpdated?`<p style="text-align:center;font-size:.7rem;color:var(--muted);font-style:italic;margin-top:14px">Last updated: ${fmtDateLong(state.lastUpdated.slice(0,10))}</p>`:''}</div><button class="fab" onclick="openAdmin()" title="Settings">⚙</button>${ui.adminOpen?`<div class="overlay" id="ov" onclick="if(event.target.id==='ov')closeAdmin()"><div class="panel">${ui.authed?renderAdminPanel():renderPinScreen()}</div></div>`:''}<div id="cfx"></div>`;
   const wEl=document.getElementById('lw'),cEl=document.getElementById('lc'),dEl=document.getElementById('ld');
   if(wEl)wEl.value=ui.logWords;if(cEl)cEl.value=ui.logChapterId;if(dEl)dEl.value=ui.logDate;
   if(ui.adminOpen&&!ui.authed)setTimeout(()=>document.getElementById('pin-in')?.focus(),60);
@@ -508,31 +410,20 @@ function render(){
 
 // ─── Actions ──────────────────────────────────────────────────────────────
 function doLog(){
-  const words=parseInt(ui.logWords);
-  if(!words||words<=0){toast('Enter a valid word count');return;}
-  const chId=parseInt(ui.logChapterId);
-  if(!chId){toast('Select a chapter');return;}
+  const words=parseInt(ui.logWords);if(!words||words<=0){toast('Enter a valid word count');return;}
+  const chId=parseInt(ui.logChapterId);if(!chId){toast('Select a chapter');return;}
   const prevPct=totals().pct;
   state.sessions=[{id:Date.now(),date:ui.logDate||todayStr(),words,chapterId:chId},...(state.sessions||[])];
-  state.lastUpdated=new Date().toISOString();
-  persist();ui.logWords='';
-  const newPct=totals().pct;
-  let mm=null;
+  state.lastUpdated=new Date().toISOString();persist();ui.logWords='';
+  const newPct=totals().pct;let mm=null;
   for(const m of MILESTONES)if(prevPct<m.pct&&newPct>=m.pct){mm=`${m.e} Milestone: ${m.l}!`;if(m.pct===100)fireConfetti();break;}
-  render();toast(mm||`✓ ${fmt(words)} words logged`);
-  document.getElementById('lw')?.focus();
+  render();toast(mm||`✓ ${fmt(words)} words logged`);document.getElementById('lw')?.focus();
 }
 
-function delSession(id){
-  if(!confirm('Remove this session?'))return;
-  state.sessions=(state.sessions||[]).filter(s=>s.id!==id);
-  persist();render();
-}
+function delSession(id){if(!confirm('Remove this session?'))return;state.sessions=(state.sessions||[]).filter(s=>s.id!==id);persist();render();}
 
 function toggleFigure(id){
-  if(!ui.authed)return;
-  const f=(state.figures||[]).find(f=>f.id===id);
-  if(!f)return;
+  if(!ui.authed)return;const f=(state.figures||[]).find(f=>f.id===id);if(!f)return;
   f.done=!f.done;state.lastUpdated=new Date().toISOString();persist();
   const{done,total}=figTotals();render();
   if(f.done){if(done===total){toast('🎉 All figures complete!');fireConfetti();}else toast(`✓ Figure marked done (${done}/${total})`);}
@@ -540,12 +431,7 @@ function toggleFigure(id){
 
 function openAdmin(){if(ui.authed)editState=JSON.parse(JSON.stringify(state));ui.adminOpen=true;ui.pinErr=false;render();}
 function closeAdmin(){ui.adminOpen=false;editState=null;render();}
-
-function tryPin(){
-  const val=document.getElementById('pin-in')?.value||'';
-  if(val===state.adminPin){ui.authed=true;sessionStorage.setItem('thesis-authed','1');ui.pinErr=false;editState=JSON.parse(JSON.stringify(state));render();}
-  else{ui.pinErr=true;render();}
-}
+function tryPin(){const val=document.getElementById('pin-in')?.value||'';if(val===state.adminPin){ui.authed=true;sessionStorage.setItem('thesis-authed','1');ui.pinErr=false;editState=JSON.parse(JSON.stringify(state));render();}else{ui.pinErr=true;render();}}
 
 async function saveAdmin(){
   if(!editState)return;
@@ -559,30 +445,36 @@ async function saveAdmin(){
   });
   const figEl=document.getElementById('ae-fig-target');
   if(figEl){
-    const newTgt=Math.max(0,parseInt(figEl.value)||0);
-    const old=editState.figures||[];
+    const newTgt=Math.max(0,parseInt(figEl.value)||0),old=editState.figures||[];
     old.forEach(f=>{const nm=v(`ae-fig-name-${f.id}`);if(nm!==null)f.name=nm;});
     if(newTgt>old.length){for(let i=old.length+1;i<=newTgt;i++)old.push({id:Date.now()+i,num:i,name:'',done:false});}
     else if(newTgt<old.length){const losing=old.slice(newTgt).filter(f=>f.done).length;if(losing>0&&!confirm(`This will remove ${losing} completed figure(s). Continue?`))return;old.splice(newTgt);}
-    old.forEach((f,i)=>{f.num=i+1;});
-    editState.figureTarget=newTgt;editState.figures=old;
+    old.forEach((f,i)=>{f.num=i+1;});editState.figureTarget=newTgt;editState.figures=old;
   }
-  // Handle API key change
+
+  // Handle credentials
   const newKey=(v('ae-apikey')||'').trim();
-  if(newKey&&newKey!==apiKey){
-    apiKey=newKey;localStorage.setItem(KEY_SK,apiKey);
-    binId='';localStorage.removeItem(BIN_SK); // force new bin creation
-  }
-  state={...editState};
-  persistLocal();
-  ui.adminOpen=false;editState=null;render();toast('✓ Saving…');
-  // Write to cloud in background
+  const newBin=(v('ae-binid')||'').trim();
+  if(newKey){apiKey=newKey;localStorage.setItem(KEY_SK,apiKey);}
+  if(newBin){binId=newBin;localStorage.setItem(BIN_SK,binId);}
+
+  state={...editState};persistLocal();
+  ui.adminOpen=false;editState=null;render();
+
   if(apiKey){
     syncState='syncing';updateSyncBadge();
-    const ok=await jbWrite(state);
-    syncState=ok?'cloud':'error';
+    // If no bin ID yet, create one
+    if(!binId){
+      toast('☁ Creating cloud bin…');
+      const newId=await jbCreate(state);
+      if(newId){binId=newId;localStorage.setItem(BIN_SK,binId);syncState='cloud';toast(`☁ Bin created. ID: ${binId}`);}
+      else{syncState='error';toast('⚠ Could not create bin — check API key');}
+    } else {
+      const ok=await jbWrite(state);
+      syncState=ok?'cloud':'error';
+      toast(ok?'☁ Synced to cloud':'⚠ Sync failed — check credentials');
+    }
     updateSyncBadge();
-    toast(ok?'☁ Synced to cloud':'⚠ Cloud sync failed — check API key');
   } else {
     toast('✓ Settings saved');
   }
@@ -590,32 +482,23 @@ async function saveAdmin(){
 
 function addChapter(){
   if(!editState)return;
-  editState.chapters.forEach(ch=>{
-    const nm=document.getElementById(`ae-ch-name-${ch.id}`),tg=document.getElementById(`ae-ch-target-${ch.id}`),bs=document.getElementById(`ae-ch-base-${ch.id}`);
-    if(nm)ch.name=nm.value;if(tg)ch.target=Math.max(0,parseInt(tg.value)||0);if(bs)ch.base=Math.max(0,parseInt(bs.value)||0);
-  });
+  editState.chapters.forEach(ch=>{const nm=document.getElementById(`ae-ch-name-${ch.id}`),tg=document.getElementById(`ae-ch-target-${ch.id}`),bs=document.getElementById(`ae-ch-base-${ch.id}`);if(nm)ch.name=nm.value;if(tg)ch.target=Math.max(0,parseInt(tg.value)||0);if(bs)ch.base=Math.max(0,parseInt(bs.value)||0);});
   editState.chapters.push({id:Date.now(),name:'New Chapter',target:5000,base:0});render();
 }
 
-function removeChapter(id){
-  if(!editState)return;
-  if(!confirm('Remove this chapter? Its session data will also be deleted.'))return;
-  editState.chapters=editState.chapters.filter(c=>c.id!==id);
-  state.sessions=(state.sessions||[]).filter(s=>s.chapterId!==id);render();
-}
+function removeChapter(id){if(!editState)return;if(!confirm('Remove this chapter?'))return;editState.chapters=editState.chapters.filter(c=>c.id!==id);state.sessions=(state.sessions||[]).filter(s=>s.chapterId!==id);render();}
 
 async function manualSync(){
   toast('↻ Pulling from cloud…');
   const remote=await jbRead();
-  if(remote){state=migrate(remote);persistLocal();render();toast('☁ Pulled latest from cloud');}
-  else toast('⚠ Could not reach cloud');
+  if(remote){state=migrate(remote);persistLocal();syncState='cloud';render();toast('☁ Pulled latest from cloud');}
+  else{syncState='error';updateSyncBadge();toast('⚠ Could not reach cloud');}
 }
 
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='thesis-tracker-backup.json';a.click();}
-function clearSessions(){if(!confirm('Delete all session history? Starting words are kept.'))return;state.sessions=[];persist();render();toast('Session history cleared');}
+function clearSessions(){if(!confirm('Delete all session history?'))return;state.sessions=[];persist();render();toast('Session history cleared');}
 
-// ─── Toast & Confetti ─────────────────────────────────────────────────────
-function toast(msg){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),2800);}
+function toast(msg){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),3500);}
 
 function fireConfetti(){
   const colors=['#C9922A','#8B1A2F','#E8C06A','#4A7C59','#2C4A8C','#E8A87C','#FFF0D0'];
@@ -630,9 +513,7 @@ async function init(){
     syncState='syncing';
     const remote=await jbRead();
     if(remote){state=migrate(remote);persistLocal();syncState='cloud';}
-    else{syncState='error';}
-  } else {
-    syncState=apiKey?'syncing':'local';
+    else syncState='error';
   }
   render();
 }
