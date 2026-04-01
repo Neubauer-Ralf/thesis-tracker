@@ -30,6 +30,13 @@ input,select{font-family:inherit}
 .hdr-title{font-size:clamp(1.7rem,4.5vw,2.8rem);font-weight:600;line-height:1.2;margin-bottom:10px}
 .hdr-author{font-size:1.1rem;font-style:italic;color:var(--muted)}
 
+/* SYNC STATUS */
+.sync-status{display:inline-flex;align-items:center;gap:5px;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin-top:10px;font-weight:500}
+.sync-status.cloud{color:var(--green);background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2)}
+.sync-status.local{color:var(--muted);background:var(--bg2);border:1px solid var(--border)}
+.sync-status.syncing{color:var(--gold);background:rgba(201,146,42,.08);border:1px solid rgba(201,146,42,.2)}
+.sync-status.error{color:var(--accent);background:rgba(139,26,47,.06);border:1px solid rgba(139,26,47,.2)}
+
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px}
 .scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 14px 13px;transition:transform .2s,box-shadow .2s}
 .scard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
@@ -95,7 +102,6 @@ input,select{font-family:inherit}
 .chpct{font-size:.65rem;font-weight:500;color:var(--muted);text-align:right}
 .chpct.done{color:var(--green)}
 
-/* FIGURES */
 .figprog{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .figbar{flex:1;height:8px;background:var(--prog-bg);border-radius:4px;overflow:hidden}
 .figfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--green-l));transition:width .8s ease}
@@ -133,6 +139,7 @@ input,select{font-family:inherit}
 .fl{display:block;font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .fi{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:.86rem;outline:none;transition:border-color .2s}
 .fi:focus{border-color:var(--gold)}
+.fi.mono{font-family:monospace;font-size:.78rem;letter-spacing:.04em}
 .sdiv{font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px;display:flex;align-items:center;gap:8px}
 .sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
 .sdivnote{font-size:.7rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
@@ -153,6 +160,15 @@ input,select{font-family:inherit}
 .fignameitem span{font-size:.68rem;color:var(--muted);min-width:36px}
 .fignameitem input{flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:.8rem;outline:none}
 .fignameitem input:focus{border-color:var(--gold)}
+
+/* Cloud sync section in admin */
+.cloud-status-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 12px;border-radius:8px;font-size:.78rem}
+.cloud-status-row.ok{background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);color:var(--green)}
+.cloud-status-row.none{background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
+.cloud-status-row.err{background:rgba(139,26,47,.06);border:1px solid rgba(139,26,47,.2);color:var(--accent)}
+.syncbtn{flex:none;padding:5px 12px;border-radius:6px;border:1px solid currentColor;background:none;font-size:.72rem;font-weight:500;color:inherit;transition:opacity .2s}
+.syncbtn:hover{opacity:.7}
+
 .savebtn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#A0223A);color:white;border:none;border-radius:8px;font-size:.9rem;font-weight:500;transition:all .2s;letter-spacing:.04em}
 .savebtn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(139,26,47,.26)}
 .dbtn{width:100%;padding:9px;background:none;border:1px solid rgba(139,26,47,.28);color:var(--accent);border-radius:8px;font-size:.8rem;margin-top:8px;transition:all .2s}
@@ -167,6 +183,12 @@ input,select{font-family:inherit}
 .pingo:hover{opacity:.88}
 .canclink{background:none;border:none;color:var(--muted);font-size:.74rem;text-decoration:underline;margin-top:2px}
 
+/* Loading screen */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:14px;color:var(--muted)}
+.loading-title{font-size:1.4rem;font-style:italic}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 .toast{position:fixed;bottom:70px;right:22px;background:var(--text);color:#FBF7F0;padding:9px 16px;border-radius:8px;font-size:.8rem;z-index:500;animation:fadeio 2.6s ease forwards;pointer-events:none}
 @keyframes fadeio{0%{opacity:0;transform:translateY(6px)}12%{opacity:1;transform:none}78%{opacity:1}100%{opacity:0}}
 @keyframes cfall{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(102vh) rotate(760deg);opacity:0}}
@@ -177,16 +199,27 @@ input,select{font-family:inherit}
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+  <div class="loading">
+    <div class="spinner"></div>
+    <div class="loading-title serif">Loading tracker…</div>
+  </div>
+</div>
 <script>
 'use strict';
-const SK='thesis-tracker-v2';
-const MILESTONES=[
+
+// ─── Storage keys ─────────────────────────────────────────────────────────
+const SK      = 'thesis-tracker-v2';
+const KEY_SK  = 'thesis-tracker-apikey';
+const BIN_SK  = 'thesis-tracker-binid';
+
+// ─── Constants ────────────────────────────────────────────────────────────
+const MILESTONES = [
   {pct:10,e:'🌱',l:'First words'},{pct:25,e:'✍️',l:'Quarter done'},
   {pct:50,e:'⭐',l:'Halfway!'},{pct:75,e:'🔥',l:'Three-quarters'},
   {pct:90,e:'🚀',l:'Almost there'},{pct:100,e:'🎓',l:'Done!'},
 ];
-const DEFAULT={
+const DEFAULT = {
   thesisTitle:'My PhD Thesis',authorName:'Scholar',adminPin:'1234',
   chapters:[
     {id:1,name:'Introduction',target:8000,base:0},
@@ -199,28 +232,112 @@ const DEFAULT={
   sessions:[],figureTarget:0,figures:[],lastUpdated:null,
 };
 
-let state=(()=>{
-  try{
-    const s=localStorage.getItem(SK);
-    if(!s)return JSON.parse(JSON.stringify(DEFAULT));
-    const p=JSON.parse(s);
-    if(p.figureTarget===undefined)p.figureTarget=0;
-    if(!p.figures)p.figures=[];
-    return p;
-  }catch{return JSON.parse(JSON.stringify(DEFAULT));}
-})();
+// ─── Cloud credentials (never in git, only in localStorage) ───────────────
+let apiKey = localStorage.getItem(KEY_SK) || '';
+let binId  = localStorage.getItem(BIN_SK) || '';
+let syncState = apiKey ? 'cloud' : 'local'; // 'cloud'|'local'|'syncing'|'error'
 
-let ui={adminOpen:false,authed:!!sessionStorage.getItem('thesis-authed'),pinErr:false,logWords:'',logChapterId:'',logDate:todayStr()};
-let editState=null;
+// ─── App state ────────────────────────────────────────────────────────────
+let state = migrate((() => {
+  try {
+    const s = localStorage.getItem(SK);
+    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT));
+  } catch { return JSON.parse(JSON.stringify(DEFAULT)); }
+})());
 
-function persist(){try{localStorage.setItem(SK,JSON.stringify(state));}catch{}}
+let ui = {
+  adminOpen:false, authed:!!sessionStorage.getItem('thesis-authed'),
+  pinErr:false, logWords:'', logChapterId:'', logDate:todayStr(),
+};
+let editState = null;
 
+function migrate(s) {
+  if (!s.figures) s.figures = [];
+  if (s.figureTarget === undefined) s.figureTarget = 0;
+  return s;
+}
+
+// ─── JSONBin API ──────────────────────────────────────────────────────────
+async function jbRead() {
+  if (!apiKey || !binId) return null;
+  try {
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+      headers: {'X-Master-Key': apiKey}
+    });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return d.record || null;
+  } catch { return null; }
+}
+
+async function jbWrite(data) {
+  if (!apiKey) return false;
+  try {
+    if (!binId) {
+      // Create new bin
+      const r = await fetch('https://api.jsonbin.io/v3/b', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-Master-Key':apiKey,'X-Bin-Name':'thesis-tracker','X-Private':'true'},
+        body: JSON.stringify(data),
+      });
+      if (!r.ok) return false;
+      const d = await r.json();
+      binId = d.metadata.id;
+      localStorage.setItem(BIN_SK, binId);
+      return true;
+    } else {
+      // Update existing bin
+      const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+        method:'PUT',
+        headers:{'Content-Type':'application/json','X-Master-Key':apiKey},
+        body: JSON.stringify(data),
+      });
+      return r.ok;
+    }
+  } catch { return false; }
+}
+
+// ─── Persist ──────────────────────────────────────────────────────────────
+function persistLocal() {
+  try { localStorage.setItem(SK, JSON.stringify(state)); } catch {}
+}
+
+function persistRemote() {
+  if (!apiKey) return;
+  syncState = 'syncing';
+  jbWrite(state).then(ok => {
+    syncState = ok ? 'cloud' : 'error';
+    updateSyncBadge();
+  });
+}
+
+function persist() {
+  persistLocal();
+  persistRemote();
+}
+
+function updateSyncBadge() {
+  const el = document.getElementById('sync-badge');
+  if (!el) return;
+  const map = {
+    cloud:   {cls:'cloud',   txt:'☁ Synced'},
+    local:   {cls:'local',   txt:'○ Local only'},
+    syncing: {cls:'syncing', txt:'↻ Syncing…'},
+    error:   {cls:'error',   txt:'⚠ Sync failed'},
+  };
+  const{cls,txt} = map[syncState] || map.local;
+  el.className = `sync-status ${cls}`;
+  el.textContent = txt;
+}
+
+// ─── Date helpers ─────────────────────────────────────────────────────────
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function daysAgoStr(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
 function fmtDateLong(s){return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});}
 function fmtDateShort(s){if(s===todayStr())return'Today';if(s===daysAgoStr(1))return'Yesterday';return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
 function fmtProjected(d){const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`;}
 
+// ─── Computed ─────────────────────────────────────────────────────────────
 function chCurrent(ch){return(ch.base||0)+(state.sessions||[]).filter(s=>s.chapterId===ch.id).reduce((s,x)=>s+x.words,0);}
 function totals(){
   const cur=state.chapters.reduce((s,c)=>s+chCurrent(c),0);
@@ -257,13 +374,23 @@ function computeStats(){
 
 function motivMsg(pct){
   const m=[[100,"It is done. Every word hard-won. Every page a testament. 🎓"],[90,"The final stretch before something remarkable is complete."],[70,"The end is in sight. This is where the work becomes legacy."],[50,"Past the halfway point. The finish line is coming into view."],[30,"Something worth reading takes time. Look how far you've come."],[15,"The first steps are always the most important — and you've taken them."],[5,"The blank page is behind you. Something is being built here."],[0,"Every great work begins with a single word. The journey starts now."]];
-  for(const[t,s]of m)if(pct>=t)return s;
-  return m[m.length-1][1];
+  for(const[t,s]of m)if(pct>=t)return s;return m[m.length-1][1];
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmt(n){return(n||0).toLocaleString('en-GB');}
 
-function renderHeader(){return`<header class="hdr"><div class="hdr-orn serif">— ✦ —</div><div class="hdr-eye">PhD Thesis · Progress Tracker</div><h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1><div class="hdr-author serif">${esc(state.authorName)}</div></header>`;}
+// ─── Render ───────────────────────────────────────────────────────────────
+function renderHeader(){
+  const syncMap={cloud:'cloud',local:'local',syncing:'syncing',error:'error'};
+  const syncTxt={cloud:'☁ Synced',local:'○ Local only',syncing:'↻ Syncing…',error:'⚠ Sync failed'};
+  return`<header class="hdr">
+  <div class="hdr-orn serif">— ✦ —</div>
+  <div class="hdr-eye">PhD Thesis · Progress Tracker</div>
+  <h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1>
+  <div class="hdr-author serif">${esc(state.authorName)}</div>
+  <div id="sync-badge" class="sync-status ${syncMap[syncState]}">${syncTxt[syncState]}</div>
+  </header>`;
+}
 
 function renderStats(s){
   const{pct}=totals();
@@ -323,17 +450,29 @@ function renderAdminPanel(){
   const ch=editState.chapters||[];
   const ft=editState.figureTarget||0;
   const figs=editState.figures||[];
+  const connected=!!(apiKey&&binId);
+  const cloudRow=connected
+    ?`<div class="cloud-status-row ok">☁ Connected<span style="flex:1;font-size:.68rem;margin-left:6px;opacity:.7">Bin: ${binId.slice(0,8)}…</span><button class="syncbtn" onclick="manualSync()">Pull latest</button></div>`
+    :`<div class="cloud-status-row ${apiKey&&!binId?'ok':'none'}">${apiKey&&!binId?'Key set — will create bin on Save':'Not connected — enter API key to enable cloud sync'}</div>`;
+
   return`<div class="phd"><div class="ptitle serif">Settings</div><button class="xbtn" onclick="closeAdmin()">✕</button></div>
   <div class="fg"><label class="fl">Author Name</label><input id="ae-author" class="fi" value="${esc(editState.authorName)}"></div>
   <div class="fg"><label class="fl">Thesis Title</label><input id="ae-title" class="fi" value="${esc(editState.thesisTitle)}"></div>
   <div class="fg"><label class="fl">Admin PIN</label><input id="ae-pin" class="fi" type="password" placeholder="Change PIN (leave blank to keep)"></div>
+
+  <div class="sdiv">Cloud Sync</div>
+  ${cloudRow}
+  <div class="fg"><label class="fl">JSONBin API Key</label><input id="ae-apikey" class="fi mono" type="password" placeholder="${apiKey?'••••••••• (change to update)':'Paste Master Key from jsonbin.io'}"></div>
+
   <div class="sdiv">Chapters</div>
   <p class="sdivnote">"Starting words" = words written before tracking began.</p>
   ${ch.map(c=>`<div class="charow"><div class="charow-top"><input id="ae-ch-name-${c.id}" class="cnin" value="${esc(c.name)}"><button class="rmbtn" onclick="removeChapter(${c.id})">✕</button></div><div class="cnums"><div><label>Word target</label><input id="ae-ch-target-${c.id}" class="nin" type="number" value="${c.target}"></div><div><label>Starting words</label><input id="ae-ch-base-${c.id}" class="nin" type="number" value="${c.base||0}"></div></div></div>`).join('')}
   <button class="addchbtn" onclick="addChapter()">+ Add Chapter</button>
+
   <div class="sdiv">Figures</div>
   <div class="fg"><label class="fl">Total figures needed</label><input id="ae-fig-target" class="fi" type="number" min="0" value="${ft}" placeholder="0"></div>
-  ${figs.length>0?`<p class="sdivnote">Optionally label each figure — shown on the tracker instead of the number.</p><div class="fignamerow">${figs.map(f=>`<div class="fignameitem"><span>Fig. ${f.num}</span><input id="ae-fig-name-${f.id}" value="${esc(f.name||'')}" placeholder="Label (optional)"></div>`).join('')}</div>`:''}
+  ${figs.length>0?`<p class="sdivnote">Optionally label each figure.</p><div class="fignamerow">${figs.map(f=>`<div class="fignameitem"><span>Fig. ${f.num}</span><input id="ae-fig-name-${f.id}" value="${esc(f.name||'')}" placeholder="Label (optional)"></div>`).join('')}</div>`:''}
+
   <div style="margin-top:20px"></div>
   <button class="savebtn" onclick="saveAdmin()">Save Changes</button>
   <div class="sdiv">Data</div>
@@ -367,6 +506,7 @@ function render(){
   if(ui.adminOpen&&!ui.authed)setTimeout(()=>document.getElementById('pin-in')?.focus(),60);
 }
 
+// ─── Actions ──────────────────────────────────────────────────────────────
 function doLog(){
   const words=parseInt(ui.logWords);
   if(!words||words<=0){toast('Enter a valid word count');return;}
@@ -393,11 +533,8 @@ function toggleFigure(id){
   if(!ui.authed)return;
   const f=(state.figures||[]).find(f=>f.id===id);
   if(!f)return;
-  f.done=!f.done;
-  state.lastUpdated=new Date().toISOString();
-  persist();
-  const{done,total}=figTotals();
-  render();
+  f.done=!f.done;state.lastUpdated=new Date().toISOString();persist();
+  const{done,total}=figTotals();render();
   if(f.done){if(done===total){toast('🎉 All figures complete!');fireConfetti();}else toast(`✓ Figure marked done (${done}/${total})`);}
 }
 
@@ -410,7 +547,7 @@ function tryPin(){
   else{ui.pinErr=true;render();}
 }
 
-function saveAdmin(){
+async function saveAdmin(){
   if(!editState)return;
   const v=id=>document.getElementById(id)?.value;
   if(v('ae-title'))editState.thesisTitle=v('ae-title');
@@ -430,7 +567,25 @@ function saveAdmin(){
     old.forEach((f,i)=>{f.num=i+1;});
     editState.figureTarget=newTgt;editState.figures=old;
   }
-  state={...editState};persist();ui.adminOpen=false;editState=null;render();toast('✓ Settings saved');
+  // Handle API key change
+  const newKey=(v('ae-apikey')||'').trim();
+  if(newKey&&newKey!==apiKey){
+    apiKey=newKey;localStorage.setItem(KEY_SK,apiKey);
+    binId='';localStorage.removeItem(BIN_SK); // force new bin creation
+  }
+  state={...editState};
+  persistLocal();
+  ui.adminOpen=false;editState=null;render();toast('✓ Saving…');
+  // Write to cloud in background
+  if(apiKey){
+    syncState='syncing';updateSyncBadge();
+    const ok=await jbWrite(state);
+    syncState=ok?'cloud':'error';
+    updateSyncBadge();
+    toast(ok?'☁ Synced to cloud':'⚠ Cloud sync failed — check API key');
+  } else {
+    toast('✓ Settings saved');
+  }
 }
 
 function addChapter(){
@@ -449,9 +604,17 @@ function removeChapter(id){
   state.sessions=(state.sessions||[]).filter(s=>s.chapterId!==id);render();
 }
 
+async function manualSync(){
+  toast('↻ Pulling from cloud…');
+  const remote=await jbRead();
+  if(remote){state=migrate(remote);persistLocal();render();toast('☁ Pulled latest from cloud');}
+  else toast('⚠ Could not reach cloud');
+}
+
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='thesis-tracker-backup.json';a.click();}
 function clearSessions(){if(!confirm('Delete all session history? Starting words are kept.'))return;state.sessions=[];persist();render();toast('Session history cleared');}
 
+// ─── Toast & Confetti ─────────────────────────────────────────────────────
 function toast(msg){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),2800);}
 
 function fireConfetti(){
@@ -461,7 +624,20 @@ function fireConfetti(){
   setTimeout(()=>{if(c)c.innerHTML='';},6500);
 }
 
-render();
+// ─── Init ─────────────────────────────────────────────────────────────────
+async function init(){
+  if(apiKey&&binId){
+    syncState='syncing';
+    const remote=await jbRead();
+    if(remote){state=migrate(remote);persistLocal();syncState='cloud';}
+    else{syncState='error';}
+  } else {
+    syncState=apiKey?'syncing':'local';
+  }
+  render();
+}
+
+init();
 </script>
 </body>
 </html>
