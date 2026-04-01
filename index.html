@@ -163,7 +163,6 @@ input,select{font-family:inherit}
 .cloud-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 12px;border-radius:8px;font-size:.78rem}
 .cloud-row.ok{background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);color:var(--green)}
 .cloud-row.none{background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
-.cloud-row.err{background:rgba(139,26,47,.06);border:1px solid rgba(139,26,47,.2);color:var(--accent)}
 .syncbtn{flex:none;padding:5px 12px;border-radius:6px;border:1px solid currentColor;background:none;font-size:.72rem;font-weight:500;color:inherit;transition:opacity .2s}
 .syncbtn:hover{opacity:.7}
 
@@ -182,6 +181,7 @@ input,select{font-family:inherit}
 .canclink{background:none;border:none;color:var(--muted);font-size:.74rem;text-decoration:underline;margin-top:2px}
 
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:14px;color:var(--muted)}
+.loading-title{font-size:1.4rem;font-style:italic}
 .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -204,9 +204,13 @@ input,select{font-family:inherit}
 <script>
 'use strict';
 
-const SK     = 'thesis-tracker-v2';
-const KEY_SK = 'thesis-tracker-apikey';
-const BIN_SK = 'thesis-tracker-binid';
+// ─── Hardcoded public credentials (read-only, safe to ship in code) ────────
+const READONLY_KEY = '$2a$10$dwlRq2d7m8YUCxXqKiOsouXQUN3yhZWpklu5Ha/XFC532/dfu1SoS';
+const BIN_ID       = '69cda72536566621a86edfc0';
+
+// ─── Master key (write access, stored in localStorage only, never in code) ─
+const MASTER_SK = 'thesis-tracker-masterkey';
+const SK        = 'thesis-tracker-v2';
 
 const MILESTONES = [
   {pct:10,e:'🌱',l:'First words'},{pct:25,e:'✍️',l:'Quarter done'},
@@ -227,10 +231,8 @@ const DEFAULT = {
   sessions:[],figureTarget:0,figures:[],lastUpdated:null,
 };
 
-// Credentials — never in git, only in localStorage
-let apiKey   = localStorage.getItem(KEY_SK) || '';
-let binId    = localStorage.getItem(BIN_SK) || '';
-let syncState = 'local';
+let masterKey = localStorage.getItem(MASTER_SK) || '';
+let syncState = 'syncing';
 
 let state = migrate((() => {
   try { const s = localStorage.getItem(SK); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT)); }
@@ -248,37 +250,25 @@ function migrate(s) {
 
 // ─── JSONBin ──────────────────────────────────────────────────────────────
 async function jbRead() {
-  if (!apiKey || !binId) return null;
   try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers:{'X-Master-Key':apiKey} });
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+      headers: {'X-Master-Key': READONLY_KEY}
+    });
     if (!r.ok) return null;
     return (await r.json()).record || null;
   } catch { return null; }
 }
 
 async function jbWrite(data) {
-  if (!apiKey || !binId) return false;
+  if (!masterKey) return false;
   try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json','X-Master-Key':apiKey},
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json','X-Master-Key': masterKey},
       body: JSON.stringify(data),
     });
     return r.ok;
   } catch { return false; }
-}
-
-async function jbCreate(data) {
-  if (!apiKey) return null;
-  try {
-    const r = await fetch('https://api.jsonbin.io/v3/b', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','X-Master-Key':apiKey,'X-Bin-Name':'thesis-tracker','X-Private':'true'},
-      body: JSON.stringify(data),
-    });
-    if (!r.ok) return null;
-    return (await r.json()).metadata.id;
-  } catch { return null; }
 }
 
 // ─── Persist ──────────────────────────────────────────────────────────────
@@ -287,7 +277,7 @@ function persistLocal() {
 }
 
 function persistRemote() {
-  if (!apiKey || !binId) return;
+  if (!masterKey) return;
   syncState = 'syncing'; updateSyncBadge();
   jbWrite(state).then(ok => { syncState = ok ? 'cloud' : 'error'; updateSyncBadge(); });
 }
@@ -297,8 +287,13 @@ function persist() { persistLocal(); persistRemote(); }
 function updateSyncBadge() {
   const el = document.getElementById('sync-badge');
   if (!el) return;
-  const map = { cloud:{cls:'cloud',txt:'☁ Synced'}, local:{cls:'local',txt:'○ Local only'}, syncing:{cls:'syncing',txt:'↻ Syncing…'}, error:{cls:'error',txt:'⚠ Sync failed'} };
-  const{cls,txt} = map[syncState] || map.local;
+  const map = {
+    cloud:   {cls:'cloud',   txt:'☁ Live'},
+    local:   {cls:'local',   txt:'○ Offline'},
+    syncing: {cls:'syncing', txt:'↻ Syncing…'},
+    error:   {cls:'error',   txt:'⚠ Sync failed'},
+  };
+  const {cls,txt} = map[syncState] || map.local;
   el.className = `sync-status ${cls}`; el.textContent = txt;
 }
 
@@ -332,7 +327,7 @@ function fmt(n){return(n||0).toLocaleString('en-GB');}
 // ─── Render ───────────────────────────────────────────────────────────────
 function renderHeader(){
   const map={cloud:'cloud',local:'local',syncing:'syncing',error:'error'};
-  const txt={cloud:'☁ Synced',local:'○ Local only',syncing:'↻ Syncing…',error:'⚠ Sync failed'};
+  const txt={cloud:'☁ Live',local:'○ Offline',syncing:'↻ Syncing…',error:'⚠ Sync failed'};
   return`<header class="hdr"><div class="hdr-orn serif">— ✦ —</div><div class="hdr-eye">PhD Thesis · Progress Tracker</div><h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1><div class="hdr-author serif">${esc(state.authorName)}</div><div id="sync-badge" class="sync-status ${map[syncState]}">${txt[syncState]}</div></header>`;
 }
 
@@ -366,10 +361,10 @@ function renderSessions(){
 
 function renderAdminPanel(){
   const ch=editState.chapters||[],ft=editState.figureTarget||0,figs=editState.figures||[];
-  const connected=!!(apiKey&&binId);
-  const cloudRow=connected
-    ?`<div class="cloud-row ok">☁ Connected<span style="flex:1;font-size:.68rem;margin-left:6px;opacity:.7">Bin: ${binId}</span><button class="syncbtn" onclick="manualSync()">Pull latest</button></div>`
-    :`<div class="cloud-row none">Not connected — enter API key and Bin ID below</div>`;
+  const hasKey = !!masterKey;
+  const cloudRow = hasKey
+    ? `<div class="cloud-row ok">☁ Write access active<button class="syncbtn" style="margin-left:auto" onclick="manualSync()">Pull latest</button></div>`
+    : `<div class="cloud-row none">Enter master key to enable writing</div>`;
 
   return`<div class="phd"><div class="ptitle serif">Settings</div><button class="xbtn" onclick="closeAdmin()">✕</button></div>
   <div class="fg"><label class="fl">Author Name</label><input id="ae-author" class="fi" value="${esc(editState.authorName)}"></div>
@@ -378,9 +373,8 @@ function renderAdminPanel(){
 
   <div class="sdiv">Cloud Sync</div>
   ${cloudRow}
-  <p class="sdivnote">Enter both values on every device. The Bin ID ties all devices to the same data. Never put these in the git repo.</p>
-  <div class="fg"><label class="fl">JSONBin API Key</label><input id="ae-apikey" class="fi mono" type="password" placeholder="${apiKey?'set — paste to change':'Paste Master Key from jsonbin.io'}"></div>
-  <div class="fg"><label class="fl">Bin ID</label><input id="ae-binid" class="fi mono" placeholder="${binId?binId:'Paste Bin ID (leave blank to create new)'}"></div>
+  <p class="sdivnote">The master key allows writing to the database. Only enter it on your own devices.</p>
+  <div class="fg"><label class="fl">Master Key</label><input id="ae-masterkey" class="fi mono" type="password" placeholder="${hasKey?'set — paste to change':'Paste JSONBin Master Key'}"></div>
 
   <div class="sdiv">Chapters</div>
   <p class="sdivnote">"Starting words" = words written before tracking began.</p>
@@ -451,32 +445,17 @@ async function saveAdmin(){
     else if(newTgt<old.length){const losing=old.slice(newTgt).filter(f=>f.done).length;if(losing>0&&!confirm(`This will remove ${losing} completed figure(s). Continue?`))return;old.splice(newTgt);}
     old.forEach((f,i)=>{f.num=i+1;});editState.figureTarget=newTgt;editState.figures=old;
   }
-
-  // Handle credentials
-  const newKey=(v('ae-apikey')||'').trim();
-  const newBin=(v('ae-binid')||'').trim();
-  if(newKey){apiKey=newKey;localStorage.setItem(KEY_SK,apiKey);}
-  if(newBin){binId=newBin;localStorage.setItem(BIN_SK,binId);}
-
+  const newKey=(v('ae-masterkey')||'').trim();
+  if(newKey){masterKey=newKey;localStorage.setItem(MASTER_SK,masterKey);}
   state={...editState};persistLocal();
   ui.adminOpen=false;editState=null;render();
-
-  if(apiKey){
+  if(masterKey){
     syncState='syncing';updateSyncBadge();
-    // If no bin ID yet, create one
-    if(!binId){
-      toast('☁ Creating cloud bin…');
-      const newId=await jbCreate(state);
-      if(newId){binId=newId;localStorage.setItem(BIN_SK,binId);syncState='cloud';toast(`☁ Bin created. ID: ${binId}`);}
-      else{syncState='error';toast('⚠ Could not create bin — check API key');}
-    } else {
-      const ok=await jbWrite(state);
-      syncState=ok?'cloud':'error';
-      toast(ok?'☁ Synced to cloud':'⚠ Sync failed — check credentials');
-    }
-    updateSyncBadge();
+    const ok=await jbWrite(state);
+    syncState=ok?'cloud':'error';updateSyncBadge();
+    toast(ok?'☁ Synced to cloud':'⚠ Sync failed — check master key');
   } else {
-    toast('✓ Settings saved');
+    toast('✓ Settings saved (local only)');
   }
 }
 
@@ -507,14 +486,11 @@ function fireConfetti(){
   setTimeout(()=>{if(c)c.innerHTML='';},6500);
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────
+// ─── Init: always read from cloud on load ─────────────────────────────────
 async function init(){
-  if(apiKey&&binId){
-    syncState='syncing';
-    const remote=await jbRead();
-    if(remote){state=migrate(remote);persistLocal();syncState='cloud';}
-    else syncState='error';
-  }
+  const remote = await jbRead();
+  if(remote){state=migrate(remote);persistLocal();syncState='cloud';}
+  else{syncState=masterKey?'error':'local';}
   render();
 }
 
