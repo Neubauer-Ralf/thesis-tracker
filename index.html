@@ -22,28 +22,22 @@ body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);min
 button{cursor:pointer;font-family:inherit}
 input,select{font-family:inherit}
 
-/* LAYOUT */
 .page{max-width:900px;margin:0 auto;padding:44px 20px 100px}
 
-/* HEADER */
 .hdr{text-align:center;padding-bottom:32px;border-bottom:1px solid var(--border);margin-bottom:32px}
 .hdr-orn{color:var(--gold);font-size:1.2rem;letter-spacing:.4em;opacity:.65;margin-bottom:8px}
 .hdr-eye{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 .hdr-title{font-size:clamp(1.7rem,4.5vw,2.8rem);font-weight:600;line-height:1.2;margin-bottom:10px}
 .hdr-author{font-size:1.1rem;font-style:italic;color:var(--muted)}
 
-/* STATS STRIP */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px}
 .scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 14px 13px;transition:transform .2s,box-shadow .2s}
 .scard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .sico{font-size:1.3rem;margin-bottom:5px}
 .sval{font-size:1.5rem;font-weight:600;line-height:1.1;margin-bottom:3px}
-.sval.gold{color:var(--gold)}
-.sval.fire{color:#E05A1A}
-.sval.green{color:var(--green)}
+.sval.gold{color:var(--gold)}.sval.fire{color:#E05A1A}.sval.green{color:var(--green)}
 .slbl{font-size:.62rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 
-/* MAIN PROGRESS */
 .mcrd{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px 24px 22px;margin-bottom:28px;position:relative;overflow:hidden}
 .mcrd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold),var(--gold-l))}
 .phdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
@@ -57,20 +51,17 @@ input,select{font-family:inherit}
 .pwords .big{color:var(--gold);font-weight:600;font-size:.9rem}
 .pwords strong{color:var(--text);font-weight:500}
 
-/* MILESTONES */
 .mrow{display:flex;justify-content:space-between;gap:4px;margin-top:20px;padding-top:18px;border-top:1px solid var(--border);flex-wrap:wrap}
 .ms{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:42px}
 .msdot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:.85rem;filter:grayscale(1);opacity:.3;transition:all .45s ease}
 .msdot.on{border-color:var(--gold);background:linear-gradient(135deg,#FFF8EC,#FFF0D0);filter:none;opacity:1;box-shadow:0 0 12px rgba(201,146,42,.3)}
 .mslbl{font-size:.56rem;font-weight:500;color:var(--muted);text-align:center;line-height:1.3}
 
-/* MOTIVATION */
 .motiv{text-align:center;padding:14px 20px 22px;font-size:1.05rem;font-style:italic;color:var(--muted);line-height:1.7}
 
-/* LOG PANEL */
 .logpanel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 20px 18px;margin-bottom:28px;position:relative;overflow:hidden}
 .logpanel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold))}
-.logtitle{font-size:1rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.logtitle{font-size:1rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .logform{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 .lf{display:flex;flex-direction:column;gap:5px}
 .lf.grow{flex:1;min-width:120px}
@@ -85,16 +76,13 @@ input,select{font-family:inherit}
 .logtoday{font-size:.76rem;color:var(--muted);margin-top:9px}
 .logtoday strong{color:var(--gold);font-weight:600}
 
-/* UNLOCK HINT */
 .unlkhint{text-align:center;margin-bottom:28px}
 .unlkbtn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 22px;border-radius:20px;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;transition:all .2s}
 .unlkbtn:hover{border-color:var(--gold);color:var(--gold)}
 
-/* SECTION HEAD */
 .shead{font-size:1.35rem;font-weight:500;margin-bottom:16px;display:flex;align-items:center;gap:10px}
 .shead::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* CHAPTERS */
 .chgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:36px}
 .chcard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:16px;transition:transform .2s,box-shadow .2s}
 .chcard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
@@ -107,7 +95,19 @@ input,select{font-family:inherit}
 .chpct{font-size:.65rem;font-weight:500;color:var(--muted);text-align:right}
 .chpct.done{color:var(--green)}
 
-/* SESSIONS */
+/* FIGURES */
+.figprog{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.figbar{flex:1;height:8px;background:var(--prog-bg);border-radius:4px;overflow:hidden}
+.figfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--green-l));transition:width .8s ease}
+.figcount{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.figcount strong{color:var(--green);font-weight:600}
+.figgrid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px}
+.figchip{padding:7px 13px;border-radius:8px;font-size:.78rem;border:1.5px solid var(--border);background:var(--card);color:var(--muted);transition:all .2s;user-select:none}
+.figchip.done{background:linear-gradient(135deg,#F0FBF4,#E8F7EE);border-color:rgba(74,124,89,.35);color:var(--green);font-weight:500}
+.figchip.clickable{cursor:pointer}
+.figchip.clickable:hover:not(.done){border-color:var(--gold);color:var(--text);background:var(--bg2)}
+.figchip.clickable.done:hover{opacity:.72}
+
 .sesslist{margin-bottom:40px}
 .sessitem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
 .sessitem:last-child{border-bottom:none}
@@ -119,11 +119,9 @@ input,select{font-family:inherit}
 .sessdel:hover{opacity:1;color:var(--accent)}
 .nosess{font-size:.84rem;color:var(--muted);font-style:italic;text-align:center;padding:22px}
 
-/* FAB */
 .fab{position:fixed;bottom:22px;right:22px;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:.95rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.09);transition:all .2s;z-index:100}
-.fab:hover{color:var(--accent);border-color:var(--accent);box-shadow:0 6px 18px rgba(0,0,0,.14)}
+.fab:hover{color:var(--accent);border-color:var(--accent)}
 
-/* OVERLAY & PANEL */
 .overlay{position:fixed;inset:0;background:rgba(44,24,16,.42);z-index:200;backdrop-filter:blur(3px);display:flex;justify-content:flex-end}
 .panel{background:var(--card);width:100%;max-width:460px;height:100vh;overflow-y:auto;padding:24px 22px;border-left:1px solid var(--border)}
 .phd{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid var(--border)}
@@ -131,7 +129,6 @@ input,select{font-family:inherit}
 .xbtn{background:none;border:none;font-size:1.2rem;color:var(--muted);padding:4px;line-height:1}
 .xbtn:hover{color:var(--text)}
 
-/* Admin form */
 .fg{margin-bottom:14px}
 .fl{display:block;font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .fi{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:.86rem;outline:none;transition:border-color .2s}
@@ -151,14 +148,17 @@ input,select{font-family:inherit}
 .nin:focus{border-color:var(--gold)}
 .addchbtn{width:100%;padding:8px;border:1.5px dashed var(--border);border-radius:8px;background:none;color:var(--muted);font-size:.82rem;margin-bottom:18px;transition:all .2s}
 .addchbtn:hover{border-color:var(--gold);color:var(--gold)}
+.fignamerow{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px;margin-top:10px}
+.fignameitem{display:flex;align-items:center;gap:6px}
+.fignameitem span{font-size:.68rem;color:var(--muted);min-width:36px}
+.fignameitem input{flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:.8rem;outline:none}
+.fignameitem input:focus{border-color:var(--gold)}
 .savebtn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#A0223A);color:white;border:none;border-radius:8px;font-size:.9rem;font-weight:500;transition:all .2s;letter-spacing:.04em}
 .savebtn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(139,26,47,.26)}
 .dbtn{width:100%;padding:9px;background:none;border:1px solid rgba(139,26,47,.28);color:var(--accent);border-radius:8px;font-size:.8rem;margin-top:8px;transition:all .2s}
 .dbtn:hover{background:rgba(139,26,47,.06)}
 
-/* PIN */
 .pinwrap{display:flex;flex-direction:column;align-items:center;padding:44px 20px;gap:14px}
-.pintitle{font-size:1.3rem;font-weight:600}
 .pinsub{font-size:.8rem;color:var(--muted);text-align:center;line-height:1.6}
 .pinin{width:160px;text-align:center;letter-spacing:.3em;font-size:1.3rem;padding:10px;border:1.5px solid var(--border);border-radius:9px;background:var(--bg);color:var(--text);outline:none}
 .pinin:focus{border-color:var(--gold)}
@@ -167,48 +167,28 @@ input,select{font-family:inherit}
 .pingo:hover{opacity:.88}
 .canclink{background:none;border:none;color:var(--muted);font-size:.74rem;text-decoration:underline;margin-top:2px}
 
-/* TOAST */
 .toast{position:fixed;bottom:70px;right:22px;background:var(--text);color:#FBF7F0;padding:9px 16px;border-radius:8px;font-size:.8rem;z-index:500;animation:fadeio 2.6s ease forwards;pointer-events:none}
 @keyframes fadeio{0%{opacity:0;transform:translateY(6px)}12%{opacity:1;transform:none}78%{opacity:1}100%{opacity:0}}
-
-/* CONFETTI */
 @keyframes cfall{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(102vh) rotate(760deg);opacity:0}}
 .cf{position:fixed;pointer-events:none;z-index:9999;animation:cfall linear forwards}
 
-/* RESPONSIVE */
-@media(max-width:520px){
-  .stats{grid-template-columns:repeat(3,1fr)}
-  .logform{flex-direction:column}
-  .logbtn{width:100%}
-}
-@media(max-width:360px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-}
+@media(max-width:520px){.stats{grid-template-columns:repeat(3,1fr)}.logform{flex-direction:column}.logbtn{width:100%}}
+@media(max-width:360px){.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div id="app"></div>
-
 <script>
 'use strict';
-
-// ─── Constants ────────────────────────────────────────────────────────────
-const SK = 'thesis-tracker-v2';
-
-const MILESTONES = [
-  {pct:10,e:'🌱',l:'First words'},
-  {pct:25,e:'✍️',l:'Quarter done'},
-  {pct:50,e:'⭐',l:'Halfway!'},
-  {pct:75,e:'🔥',l:'Three-quarters'},
-  {pct:90,e:'🚀',l:'Almost there'},
-  {pct:100,e:'🎓',l:'Done!'},
+const SK='thesis-tracker-v2';
+const MILESTONES=[
+  {pct:10,e:'🌱',l:'First words'},{pct:25,e:'✍️',l:'Quarter done'},
+  {pct:50,e:'⭐',l:'Halfway!'},{pct:75,e:'🔥',l:'Three-quarters'},
+  {pct:90,e:'🚀',l:'Almost there'},{pct:100,e:'🎓',l:'Done!'},
 ];
-
-const DEFAULT_STATE = {
-  thesisTitle: 'My PhD Thesis',
-  authorName: 'Scholar',
-  adminPin: '1234',
-  chapters: [
+const DEFAULT={
+  thesisTitle:'My PhD Thesis',authorName:'Scholar',adminPin:'1234',
+  chapters:[
     {id:1,name:'Introduction',target:8000,base:0},
     {id:2,name:'Literature Review',target:20000,base:0},
     {id:3,name:'Methodology',target:12000,base:0},
@@ -216,617 +196,271 @@ const DEFAULT_STATE = {
     {id:5,name:'Discussion',target:18000,base:0},
     {id:6,name:'Conclusion',target:7000,base:0},
   ],
-  sessions: [],
-  lastUpdated: null,
+  sessions:[],figureTarget:0,figures:[],lastUpdated:null,
 };
 
-// ─── State ────────────────────────────────────────────────────────────────
-let state = (() => {
-  try {
-    const saved = localStorage.getItem(SK);
-    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_STATE));
-  } catch { return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+let state=(()=>{
+  try{
+    const s=localStorage.getItem(SK);
+    if(!s)return JSON.parse(JSON.stringify(DEFAULT));
+    const p=JSON.parse(s);
+    if(p.figureTarget===undefined)p.figureTarget=0;
+    if(!p.figures)p.figures=[];
+    return p;
+  }catch{return JSON.parse(JSON.stringify(DEFAULT));}
 })();
 
-let ui = {
-  adminOpen: false,
-  authed: !!sessionStorage.getItem('thesis-authed'),
-  pinErr: false,
-  logWords: '',
-  logChapterId: '',
-  logDate: todayStr(),
-};
+let ui={adminOpen:false,authed:!!sessionStorage.getItem('thesis-authed'),pinErr:false,logWords:'',logChapterId:'',logDate:todayStr()};
+let editState=null;
 
-let editState = null;
+function persist(){try{localStorage.setItem(SK,JSON.stringify(state));}catch{}}
 
-function persist() {
-  try { localStorage.setItem(SK, JSON.stringify(state)); } catch {}
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function daysAgoStr(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
+function fmtDateLong(s){return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});}
+function fmtDateShort(s){if(s===todayStr())return'Today';if(s===daysAgoStr(1))return'Yesterday';return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+function fmtProjected(d){const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`;}
+
+function chCurrent(ch){return(ch.base||0)+(state.sessions||[]).filter(s=>s.chapterId===ch.id).reduce((s,x)=>s+x.words,0);}
+function totals(){
+  const cur=state.chapters.reduce((s,c)=>s+chCurrent(c),0);
+  const tgt=state.chapters.reduce((s,c)=>s+(c.target||0),0);
+  return{current:cur,target:tgt,pct:tgt>0?Math.min(100,Math.round(cur/tgt*100)):0};
 }
-
-// ─── Date helpers ─────────────────────────────────────────────────────────
-function todayStr() {
-  return new Date().toISOString().slice(0,10);
+function figTotals(){
+  const total=state.figureTarget||0;
+  const done=(state.figures||[]).filter(f=>f.done).length;
+  return{total,done,pct:total>0?Math.round(done/total*100):0};
 }
-
-function daysAgoStr(n) {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
-  return d.toISOString().slice(0,10);
-}
-
-function fmtDateLong(str) {
-  const d = new Date(str + 'T12:00:00');
-  return d.toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
-}
-
-function fmtDateShort(str) {
-  const today = todayStr();
-  const yest  = daysAgoStr(1);
-  if (str === today) return 'Today';
-  if (str === yest)  return 'Yesterday';
-  const d = new Date(str + 'T12:00:00');
-  return d.toLocaleDateString('en-GB', {day:'numeric',month:'short'});
-}
-
-function fmtProjectedDate(d) {
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-// ─── Computed values ──────────────────────────────────────────────────────
-function chapterCurrent(ch) {
-  const fromSessions = (state.sessions || [])
-    .filter(s => s.chapterId === ch.id)
-    .reduce((sum, s) => sum + s.words, 0);
-  return (ch.base || 0) + fromSessions;
-}
-
-function totals() {
-  const current = state.chapters.reduce((s, c) => s + chapterCurrent(c), 0);
-  const target  = state.chapters.reduce((s, c) => s + (c.target || 0), 0);
-  const pct     = target > 0 ? Math.min(100, Math.round(current / target * 100)) : 0;
-  return { current, target, pct };
-}
-
-function computeStats() {
-  const sessions = state.sessions || [];
-  const today    = todayStr();
-
-  // Today's words
-  const todayWords = sessions
-    .filter(s => s.date === today)
-    .reduce((sum, s) => sum + s.words, 0);
-
-  // This week (7 days including today)
-  const weekStart  = daysAgoStr(6);
-  const weekWords  = sessions
-    .filter(s => s.date >= weekStart)
-    .reduce((sum, s) => sum + s.words, 0);
-
-  // Writing streak: consecutive days with sessions going backwards from today or yesterday
-  function calcStreak() {
-    if (!sessions.length) return 0;
-    const days = new Set(sessions.map(s => s.date));
-    const startFrom = days.has(today) ? today : daysAgoStr(1);
-    if (!days.has(startFrom)) return 0;
-    let streak = 0;
-    const d = new Date(startFrom + 'T12:00:00');
-    while (days.has(d.toISOString().slice(0, 10))) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    }
-    return streak;
+function computeStats(){
+  const ss=state.sessions||[];
+  const today=todayStr();
+  const todayWords=ss.filter(s=>s.date===today).reduce((s,x)=>s+x.words,0);
+  const weekWords=ss.filter(s=>s.date>=daysAgoStr(6)).reduce((s,x)=>s+x.words,0);
+  function streak(){
+    if(!ss.length)return 0;
+    const days=new Set(ss.map(s=>s.date));
+    const from=days.has(today)?today:daysAgoStr(1);
+    if(!days.has(from))return 0;
+    let n=0;const d=new Date(from+'T12:00:00');
+    while(days.has(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1);}
+    return n;
   }
-
-  // 14-day velocity (avg words per day including zero days)
-  const fourteenStart = daysAgoStr(13);
-  const recentWords   = sessions
-    .filter(s => s.date >= fourteenStart)
-    .reduce((sum, s) => sum + s.words, 0);
-  const avgPerDay = Math.round(recentWords / 14);
-
-  // All-time best single session
-  const best = sessions.reduce((m, s) => Math.max(m, s.words), 0);
-
-  // Projected finish date
-  const { current, target } = totals();
-  let projected = null;
-  if (avgPerDay > 0 && current < target) {
-    const daysLeft = Math.ceil((target - current) / avgPerDay);
-    const d = new Date();
-    d.setDate(d.getDate() + daysLeft);
-    projected = d;
-  }
-
-  return { todayWords, weekWords, streak: calcStreak(), avgPerDay, best, projected };
+  const rw=ss.filter(s=>s.date>=daysAgoStr(13)).reduce((s,x)=>s+x.words,0);
+  const avg=Math.round(rw/14);
+  const best=ss.reduce((m,s)=>Math.max(m,s.words),0);
+  const{current,target}=totals();
+  let projected=null;
+  if(avg>0&&current<target){const d=new Date();d.setDate(d.getDate()+Math.ceil((target-current)/avg));projected=d;}
+  return{todayWords,weekWords,streak:streak(),avgPerDay:avg,best,projected};
 }
 
-// ─── Motivation ───────────────────────────────────────────────────────────
-function motivationMsg(pct) {
-  const msgs = [
-    [100, "It is done. Every word hard-won. Every page a testament. 🎓"],
-    [90,  "The final stretch before something remarkable is complete."],
-    [70,  "The end is in sight. This is where the work becomes legacy."],
-    [50,  "Past the halfway point. The finish line is coming into view."],
-    [30,  "Something worth reading takes time. Look how far you've come."],
-    [15,  "The first steps are always the most important — and you've taken them."],
-    [5,   "The blank page is behind you. Something is being built here."],
-    [0,   "Every great work begins with a single word. The journey starts now."],
-  ];
-  for (const [threshold, msg] of msgs) {
-    if (pct >= threshold) return msg;
-  }
-  return msgs[msgs.length - 1][1];
+function motivMsg(pct){
+  const m=[[100,"It is done. Every word hard-won. Every page a testament. 🎓"],[90,"The final stretch before something remarkable is complete."],[70,"The end is in sight. This is where the work becomes legacy."],[50,"Past the halfway point. The finish line is coming into view."],[30,"Something worth reading takes time. Look how far you've come."],[15,"The first steps are always the most important — and you've taken them."],[5,"The blank page is behind you. Something is being built here."],[0,"Every great work begins with a single word. The journey starts now."]];
+  for(const[t,s]of m)if(pct>=t)return s;
+  return m[m.length-1][1];
 }
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n){return(n||0).toLocaleString('en-GB');}
 
-// ─── HTML helpers ─────────────────────────────────────────────────────────
-function esc(str) {
-  return String(str || '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function renderHeader(){return`<header class="hdr"><div class="hdr-orn serif">— ✦ —</div><div class="hdr-eye">PhD Thesis · Progress Tracker</div><h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1><div class="hdr-author serif">${esc(state.authorName)}</div></header>`;}
 
-function fmt(n) {
-  return (n || 0).toLocaleString('en-GB');
-}
-
-// ─── Render sections ──────────────────────────────────────────────────────
-function renderHeader() {
-  return `
-  <header class="hdr">
-    <div class="hdr-orn serif">— ✦ —</div>
-    <div class="hdr-eye">PhD Thesis · Progress Tracker</div>
-    <h1 class="hdr-title serif">${esc(state.thesisTitle)}</h1>
-    <div class="hdr-author serif">${esc(state.authorName)}</div>
-  </header>`;
-}
-
-function renderStats(s) {
-  const { pct } = totals();
-  let projVal, projClass = '';
-  if (pct >= 100) {
-    projVal = '🎓 Done!'; projClass = 'green';
-  } else if (s.projected) {
-    projVal = `<span style="font-size:1rem">${fmtProjectedDate(s.projected)}</span>`;
-    projClass = 'green';
-  } else {
-    projVal = '<span style="font-size:.9rem;color:var(--muted)">Keep going</span>';
-  }
-
-  const streakClass = s.streak >= 14 ? 'fire' : s.streak >= 7 ? 'gold' : '';
-
-  return `
-  <div class="stats">
-    <div class="scard">
-      <div class="sico">🔥</div>
-      <div class="sval ${streakClass}">${s.streak}</div>
-      <div class="slbl">Day streak</div>
-    </div>
-    <div class="scard">
-      <div class="sico">✍️</div>
-      <div class="sval gold">${fmt(s.todayWords)}</div>
-      <div class="slbl">Today</div>
-    </div>
-    <div class="scard">
-      <div class="sico">📅</div>
-      <div class="sval">${fmt(s.weekWords)}</div>
-      <div class="slbl">This week</div>
-    </div>
-    <div class="scard">
-      <div class="sico">⚡</div>
-      <div class="sval">${s.avgPerDay > 0 ? fmt(s.avgPerDay) : '—'}</div>
-      <div class="slbl">Avg/day</div>
-    </div>
-    <div class="scard">
-      <div class="sico">🏁</div>
-      <div class="sval ${projClass}">${projVal}</div>
-      <div class="slbl">Finish estimate</div>
-    </div>
-    <div class="scard">
-      <div class="sico">🏆</div>
-      <div class="sval">${s.best > 0 ? fmt(s.best) : '—'}</div>
-      <div class="slbl">Best session</div>
-    </div>
+function renderStats(s){
+  const{pct}=totals();
+  let pv,pc='';
+  if(pct>=100){pv='🎓 Done!';pc='green';}
+  else if(s.projected){pv=`<span style="font-size:1rem">${fmtProjected(s.projected)}</span>`;pc='green';}
+  else pv='<span style="font-size:.9rem;color:var(--muted)">Keep going</span>';
+  const sc=s.streak>=14?'fire':s.streak>=7?'gold':'';
+  return`<div class="stats">
+  <div class="scard"><div class="sico">🔥</div><div class="sval ${sc}">${s.streak}</div><div class="slbl">Day streak</div></div>
+  <div class="scard"><div class="sico">✍️</div><div class="sval gold">${fmt(s.todayWords)}</div><div class="slbl">Today</div></div>
+  <div class="scard"><div class="sico">📅</div><div class="sval">${fmt(s.weekWords)}</div><div class="slbl">This week</div></div>
+  <div class="scard"><div class="sico">⚡</div><div class="sval">${s.avgPerDay>0?fmt(s.avgPerDay):'—'}</div><div class="slbl">Avg/day</div></div>
+  <div class="scard"><div class="sico">🏁</div><div class="sval ${pc}">${pv}</div><div class="slbl">Finish estimate</div></div>
+  <div class="scard"><div class="sico">🏆</div><div class="sval">${s.best>0?fmt(s.best):'—'}</div><div class="slbl">Best session</div></div>
   </div>`;
 }
 
-function renderMainProgress(pct, current, target) {
-  return `
-  <div class="mcrd">
-    <div class="phdr">
-      <span class="plbl">Overall Progress</span>
-      <span class="ppct serif">${pct}%</span>
-    </div>
-    <div class="ptrack">
-      <div class="pfill" style="width:${Math.max(0, pct)}%"></div>
-    </div>
-    <div class="pwords">
-      <span><span class="big">${fmt(current)}</span> words written</span>
-      <span>goal: <strong>${fmt(target)}</strong> words</span>
-    </div>
-    <div class="mrow">
-      ${MILESTONES.map(m => `
-        <div class="ms">
-          <div class="msdot ${pct >= m.pct ? 'on' : ''}">${m.e}</div>
-          <div class="mslbl">${m.l}</div>
-        </div>`).join('')}
-    </div>
+function renderProgress(pct,cur,tgt){return`<div class="mcrd"><div class="phdr"><span class="plbl">Overall Progress</span><span class="ppct serif">${pct}%</span></div><div class="ptrack"><div class="pfill" style="width:${Math.max(0,pct)}%"></div></div><div class="pwords"><span><span class="big">${fmt(cur)}</span> words written</span><span>goal: <strong>${fmt(tgt)}</strong> words</span></div><div class="mrow">${MILESTONES.map(m=>`<div class="ms"><div class="msdot ${pct>=m.pct?'on':''}">${m.e}</div><div class="mslbl">${m.l}</div></div>`).join('')}</div></div>`;}
+
+function renderLogPanel(s){
+  const opts=state.chapters.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  return`<div class="logpanel"><div class="logtitle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Log Writing Session</div>
+  <div class="logform">
+    <div class="lf" style="width:100px"><label>Words written</label><input id="lw" type="number" class="lin" placeholder="e.g. 650" min="1" oninput="ui.logWords=this.value" onkeydown="if(event.key==='Enter')doLog()"></div>
+    <div class="lf grow"><label>Chapter</label><select id="lc" class="lsel" onchange="ui.logChapterId=this.value"><option value="">Select…</option>${opts}</select></div>
+    <div class="lf" style="width:140px"><label>Date</label><input id="ld" type="date" class="lin" value="${ui.logDate}" onchange="ui.logDate=this.value"></div>
+    <button class="logbtn" onclick="doLog()">Log ✓</button>
+  </div>
+  ${s.todayWords>0?`<div class="logtoday">Today so far: <strong>${fmt(s.todayWords)}</strong> words</div>`:''}
   </div>`;
 }
 
-function renderLogPanel(s) {
-  const opts = state.chapters.map(c =>
-    `<option value="${c.id}">${esc(c.name)}</option>`
-  ).join('');
-  return `
-  <div class="logpanel">
-    <div class="logtitle">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      Log Writing Session
-    </div>
-    <div class="logform">
-      <div class="lf" style="width:100px">
-        <label>Words written</label>
-        <input id="log-words" type="number" class="lin" placeholder="e.g. 650" min="1"
-          oninput="ui.logWords=this.value"
-          onkeydown="if(event.key==='Enter')doLog()">
-      </div>
-      <div class="lf grow">
-        <label>Chapter</label>
-        <select id="log-ch" class="lsel" onchange="ui.logChapterId=this.value">
-          <option value="">Select…</option>
-          ${opts}
-        </select>
-      </div>
-      <div class="lf" style="width:140px">
-        <label>Date</label>
-        <input type="date" class="lin" value="${ui.logDate}"
-          onchange="ui.logDate=this.value">
-      </div>
-      <button class="logbtn" onclick="doLog()">Log ✓</button>
-    </div>
-    ${s.todayWords > 0
-      ? `<div class="logtoday">Today so far: <strong>${fmt(s.todayWords)}</strong> words</div>`
-      : ''}
-  </div>`;
+function renderChapters(){return`<div class="chgrid">${state.chapters.map(ch=>{const cur=chCurrent(ch),cp=ch.target>0?Math.min(100,Math.round(cur/ch.target*100)):0,done=cp>=100;return`<div class="chcard ${done?'done':''}"><div class="chname">${esc(ch.name)}</div><div class="chwords">${fmt(cur)} / ${fmt(ch.target)} words</div><div class="chtrack"><div class="chfill ${done?'done':''}" style="width:${cp}%"></div></div><div class="chpct ${done?'done':''}">${done?'✓ Complete':cp+'%'}</div></div>`;}).join('')}</div>`;}
+
+function renderFigures(){
+  const{total,done,pct}=figTotals();
+  if(total===0)return'';
+  const chips=(state.figures||[]).map(f=>{
+    const lbl=f.name?esc(f.name):`Fig. ${f.num}`;
+    const cl=ui.authed?'clickable':'';
+    const oc=ui.authed?`onclick="toggleFigure(${f.id})"`:'';
+    return`<div class="figchip ${f.done?'done':''} ${cl}" ${oc}>${f.done?'✓':'○'} ${lbl}</div>`;
+  }).join('');
+  return`<div class="shead serif">Figures</div><div class="figprog"><div class="figbar"><div class="figfill" style="width:${pct}%"></div></div><div class="figcount"><strong>${done}</strong> of ${total} complete</div></div><div class="figgrid">${chips}</div>`;
 }
 
-function renderChapters() {
-  return `
-  <div class="chgrid">
-    ${state.chapters.map(ch => {
-      const cur  = chapterCurrent(ch);
-      const cp   = ch.target > 0 ? Math.min(100, Math.round(cur / ch.target * 100)) : 0;
-      const done = cp >= 100;
-      return `
-      <div class="chcard ${done ? 'done' : ''}">
-        <div class="chname">${esc(ch.name)}</div>
-        <div class="chwords">${fmt(cur)} / ${fmt(ch.target)} words</div>
-        <div class="chtrack">
-          <div class="chfill ${done ? 'done' : ''}" style="width:${cp}%"></div>
-        </div>
-        <div class="chpct ${done ? 'done' : ''}">${done ? '✓ Complete' : cp + '%'}</div>
-      </div>`;
-    }).join('')}
-  </div>`;
+function renderSessions(){
+  const ss=(state.sessions||[]).slice(0,15);
+  const cm=Object.fromEntries(state.chapters.map(c=>[c.id,c.name]));
+  const today=todayStr();
+  const list=ss.length?ss.map(s=>`<div class="sessitem"><span class="sessdate">${fmtDateShort(s.date)}</span><span class="sesswords">${fmt(s.words)} words</span><span class="sessch">${esc(cm[s.chapterId]||'Chapter')}</span>${s.date===today?'<span class="sessbdg">today</span>':''}${ui.authed?`<button class="sessdel" onclick="delSession(${s.id})" title="Remove">✕</button>`:''}</div>`).join(''):`<div class="nosess">No sessions logged yet — start writing! ✍️</div>`;
+  return`<div class="shead serif">Recent Sessions</div><div class="sesslist">${list}</div>`;
 }
 
-function renderSessions() {
-  const sessions = (state.sessions || []).slice(0, 15);
-  const chapMap  = Object.fromEntries(state.chapters.map(c => [c.id, c.name]));
-  const today    = todayStr();
-
-  const list = sessions.length
-    ? sessions.map(s => `
-      <div class="sessitem">
-        <span class="sessdate">${fmtDateShort(s.date)}</span>
-        <span class="sesswords">${fmt(s.words)} words</span>
-        <span class="sessch">${esc(chapMap[s.chapterId] || 'Chapter')}</span>
-        ${s.date === today ? '<span class="sessbdg">today</span>' : ''}
-        ${ui.authed
-          ? `<button class="sessdel" onclick="delSession(${s.id})" title="Remove">✕</button>`
-          : ''}
-      </div>`).join('')
-    : `<div class="nosess">No sessions logged yet — start writing! ✍️</div>`;
-
-  return `
-  <div class="shead serif">Recent Sessions</div>
-  <div class="sesslist">${list}</div>`;
-}
-
-function renderAdminPanel() {
-  const ch = editState.chapters || [];
-  return `
-  <div class="phd">
-    <div class="ptitle serif">Settings</div>
-    <button class="xbtn" onclick="closeAdmin()">✕</button>
-  </div>
-
-  <div class="fg">
-    <label class="fl">Author Name</label>
-    <input id="ae-author" class="fi" value="${esc(editState.authorName)}">
-  </div>
-  <div class="fg">
-    <label class="fl">Thesis Title</label>
-    <input id="ae-title" class="fi" value="${esc(editState.thesisTitle)}">
-  </div>
-  <div class="fg">
-    <label class="fl">Admin PIN</label>
-    <input id="ae-pin" class="fi" type="password" placeholder="Change PIN (leave blank to keep)">
-  </div>
-
+function renderAdminPanel(){
+  const ch=editState.chapters||[];
+  const ft=editState.figureTarget||0;
+  const figs=editState.figures||[];
+  return`<div class="phd"><div class="ptitle serif">Settings</div><button class="xbtn" onclick="closeAdmin()">✕</button></div>
+  <div class="fg"><label class="fl">Author Name</label><input id="ae-author" class="fi" value="${esc(editState.authorName)}"></div>
+  <div class="fg"><label class="fl">Thesis Title</label><input id="ae-title" class="fi" value="${esc(editState.thesisTitle)}"></div>
+  <div class="fg"><label class="fl">Admin PIN</label><input id="ae-pin" class="fi" type="password" placeholder="Change PIN (leave blank to keep)"></div>
   <div class="sdiv">Chapters</div>
-  <p class="sdivnote">"Starting words" = words already written before tracking began (imported from existing draft).</p>
-
-  ${ch.map(c => `
-  <div class="charow">
-    <div class="charow-top">
-      <input id="ae-ch-name-${c.id}" class="cnin" value="${esc(c.name)}" placeholder="Chapter name">
-      <button class="rmbtn" onclick="removeChapter(${c.id})">✕</button>
-    </div>
-    <div class="cnums">
-      <div>
-        <label>Word target</label>
-        <input id="ae-ch-target-${c.id}" class="nin" type="number" value="${c.target}">
-      </div>
-      <div>
-        <label>Starting words</label>
-        <input id="ae-ch-base-${c.id}" class="nin" type="number" value="${c.base || 0}">
-      </div>
-    </div>
-  </div>`).join('')}
-
+  <p class="sdivnote">"Starting words" = words written before tracking began.</p>
+  ${ch.map(c=>`<div class="charow"><div class="charow-top"><input id="ae-ch-name-${c.id}" class="cnin" value="${esc(c.name)}"><button class="rmbtn" onclick="removeChapter(${c.id})">✕</button></div><div class="cnums"><div><label>Word target</label><input id="ae-ch-target-${c.id}" class="nin" type="number" value="${c.target}"></div><div><label>Starting words</label><input id="ae-ch-base-${c.id}" class="nin" type="number" value="${c.base||0}"></div></div></div>`).join('')}
   <button class="addchbtn" onclick="addChapter()">+ Add Chapter</button>
+  <div class="sdiv">Figures</div>
+  <div class="fg"><label class="fl">Total figures needed</label><input id="ae-fig-target" class="fi" type="number" min="0" value="${ft}" placeholder="0"></div>
+  ${figs.length>0?`<p class="sdivnote">Optionally label each figure — shown on the tracker instead of the number.</p><div class="fignamerow">${figs.map(f=>`<div class="fignameitem"><span>Fig. ${f.num}</span><input id="ae-fig-name-${f.id}" value="${esc(f.name||'')}" placeholder="Label (optional)"></div>`).join('')}</div>`:''}
+  <div style="margin-top:20px"></div>
   <button class="savebtn" onclick="saveAdmin()">Save Changes</button>
-
   <div class="sdiv">Data</div>
   <button class="dbtn" onclick="exportData()">📥 Export Backup (JSON)</button>
   <button class="dbtn" onclick="clearSessions()">⚠ Clear Session History</button>`;
 }
 
-function renderPinScreen() {
-  return `
-  <div class="phd">
-    <div class="ptitle serif">Writer Mode</div>
-    <button class="xbtn" onclick="closeAdmin()">✕</button>
-  </div>
-  <div class="pinwrap">
-    <div class="pinsub">Enter your PIN to log writing sessions and edit settings</div>
-    <input id="pin-in" class="pinin" type="password" placeholder="••••" maxlength="8"
-      onkeydown="if(event.key==='Enter')tryPin()">
-    ${ui.pinErr ? '<div class="pinerr">Incorrect PIN — try again</div>' : ''}
-    <button class="pingo" onclick="tryPin()">Unlock</button>
-    <button class="canclink" onclick="closeAdmin()">Cancel</button>
-    <div style="font-size:.68rem;color:var(--muted);margin-top:4px">Default PIN: 1234</div>
-  </div>`;
-}
+function renderPinScreen(){return`<div class="phd"><div class="ptitle serif">Writer Mode</div><button class="xbtn" onclick="closeAdmin()">✕</button></div><div class="pinwrap"><div class="pinsub">Enter your PIN to log sessions and edit settings</div><input id="pin-in" class="pinin" type="password" placeholder="••••" maxlength="8" onkeydown="if(event.key==='Enter')tryPin()">${ui.pinErr?'<div class="pinerr">Incorrect PIN — try again</div>':''}<button class="pingo" onclick="tryPin()">Unlock</button><button class="canclink" onclick="closeAdmin()">Cancel</button><div style="font-size:.68rem;color:var(--muted);margin-top:4px">Default PIN: 1234</div></div>`;}
 
-// ─── Main render ──────────────────────────────────────────────────────────
-function render() {
-  const { current, target, pct } = totals();
-  const s = computeStats();
-
-  document.getElementById('app').innerHTML = `
+function render(){
+  const{current,target,pct}=totals();
+  const s=computeStats();
+  document.getElementById('app').innerHTML=`
   <div class="page">
     ${renderHeader()}
     ${renderStats(s)}
-    ${renderMainProgress(pct, current, target)}
-    <div class="motiv serif">${motivationMsg(pct)}</div>
-    ${ui.authed
-      ? renderLogPanel(s)
-      : `<div class="unlkhint">
-           <button class="unlkbtn" onclick="openAdmin()">✍ Writer Mode</button>
-         </div>`}
+    ${renderProgress(pct,current,target)}
+    <div class="motiv serif">${motivMsg(pct)}</div>
+    ${ui.authed?renderLogPanel(s):`<div class="unlkhint"><button class="unlkbtn" onclick="openAdmin()">✍ Writer Mode</button></div>`}
     <div class="shead serif">Chapters</div>
     ${renderChapters()}
+    ${renderFigures()}
     ${renderSessions()}
-    ${state.lastUpdated
-      ? `<p style="text-align:center;font-size:.7rem;color:var(--muted);font-style:italic;margin-top:14px">
-           Last updated: ${fmtDateLong(state.lastUpdated.slice(0,10))}
-         </p>`
-      : ''}
+    ${state.lastUpdated?`<p style="text-align:center;font-size:.7rem;color:var(--muted);font-style:italic;margin-top:14px">Last updated: ${fmtDateLong(state.lastUpdated.slice(0,10))}</p>`:''}
   </div>
-
   <button class="fab" onclick="openAdmin()" title="Settings">⚙</button>
-
-  ${ui.adminOpen ? `
-  <div class="overlay" id="ov" onclick="if(event.target.id==='ov')closeAdmin()">
-    <div class="panel">
-      ${ui.authed ? renderAdminPanel() : renderPinScreen()}
-    </div>
-  </div>` : ''}
-
+  ${ui.adminOpen?`<div class="overlay" id="ov" onclick="if(event.target.id==='ov')closeAdmin()"><div class="panel">${ui.authed?renderAdminPanel():renderPinScreen()}</div></div>`:''}
   <div id="cfx"></div>`;
-
-  // Restore log form state
-  const wEl = document.getElementById('log-words');
-  const cEl = document.getElementById('log-ch');
-  const dEl = document.querySelector('input[type="date"]');
-  if (wEl) { wEl.value = ui.logWords; }
-  if (cEl) { cEl.value = ui.logChapterId; }
-  if (dEl && dEl.closest('.logpanel')) { dEl.value = ui.logDate; }
-
-  // Focus PIN input when it appears
-  if (ui.adminOpen && !ui.authed) {
-    setTimeout(() => document.getElementById('pin-in')?.focus(), 60);
-  }
+  const wEl=document.getElementById('lw'),cEl=document.getElementById('lc'),dEl=document.getElementById('ld');
+  if(wEl)wEl.value=ui.logWords;if(cEl)cEl.value=ui.logChapterId;if(dEl)dEl.value=ui.logDate;
+  if(ui.adminOpen&&!ui.authed)setTimeout(()=>document.getElementById('pin-in')?.focus(),60);
 }
 
-// ─── Actions ──────────────────────────────────────────────────────────────
-function doLog() {
-  const words = parseInt(ui.logWords);
-  if (!words || words <= 0) { toast('Enter a valid word count'); return; }
-  const chId = parseInt(ui.logChapterId);
-  if (!chId) { toast('Select a chapter'); return; }
+function doLog(){
+  const words=parseInt(ui.logWords);
+  if(!words||words<=0){toast('Enter a valid word count');return;}
+  const chId=parseInt(ui.logChapterId);
+  if(!chId){toast('Select a chapter');return;}
+  const prevPct=totals().pct;
+  state.sessions=[{id:Date.now(),date:ui.logDate||todayStr(),words,chapterId:chId},...(state.sessions||[])];
+  state.lastUpdated=new Date().toISOString();
+  persist();ui.logWords='';
+  const newPct=totals().pct;
+  let mm=null;
+  for(const m of MILESTONES)if(prevPct<m.pct&&newPct>=m.pct){mm=`${m.e} Milestone: ${m.l}!`;if(m.pct===100)fireConfetti();break;}
+  render();toast(mm||`✓ ${fmt(words)} words logged`);
+  document.getElementById('lw')?.focus();
+}
 
-  const prevPct = totals().pct;
+function delSession(id){
+  if(!confirm('Remove this session?'))return;
+  state.sessions=(state.sessions||[]).filter(s=>s.id!==id);
+  persist();render();
+}
 
-  state.sessions = [{
-    id: Date.now(),
-    date: ui.logDate || todayStr(),
-    words,
-    chapterId: chId,
-  }, ...(state.sessions || [])];
-  state.lastUpdated = new Date().toISOString();
-
+function toggleFigure(id){
+  if(!ui.authed)return;
+  const f=(state.figures||[]).find(f=>f.id===id);
+  if(!f)return;
+  f.done=!f.done;
+  state.lastUpdated=new Date().toISOString();
   persist();
-  ui.logWords = '';
-
-  const newPct = totals().pct;
-
-  // Check for milestone crossings
-  let milestoneMsg = null;
-  for (const m of MILESTONES) {
-    if (prevPct < m.pct && newPct >= m.pct) {
-      milestoneMsg = `${m.e} Milestone: ${m.l}!`;
-      if (m.pct === 100) fireConfetti();
-      break;
-    }
-  }
-
+  const{done,total}=figTotals();
   render();
-  toast(milestoneMsg || `✓ ${fmt(words)} words logged`);
-  document.getElementById('log-words')?.focus();
+  if(f.done){if(done===total){toast('🎉 All figures complete!');fireConfetti();}else toast(`✓ Figure marked done (${done}/${total})`);}
 }
 
-function delSession(id) {
-  if (!confirm('Remove this session?')) return;
-  state.sessions = (state.sessions || []).filter(s => s.id !== id);
-  persist();
-  render();
+function openAdmin(){if(ui.authed)editState=JSON.parse(JSON.stringify(state));ui.adminOpen=true;ui.pinErr=false;render();}
+function closeAdmin(){ui.adminOpen=false;editState=null;render();}
+
+function tryPin(){
+  const val=document.getElementById('pin-in')?.value||'';
+  if(val===state.adminPin){ui.authed=true;sessionStorage.setItem('thesis-authed','1');ui.pinErr=false;editState=JSON.parse(JSON.stringify(state));render();}
+  else{ui.pinErr=true;render();}
 }
 
-function openAdmin() {
-  if (ui.authed) editState = JSON.parse(JSON.stringify(state));
-  ui.adminOpen = true;
-  ui.pinErr = false;
-  render();
-}
-
-function closeAdmin() {
-  ui.adminOpen = false;
-  editState = null;
-  render();
-}
-
-function tryPin() {
-  const val = document.getElementById('pin-in')?.value || '';
-  if (val === state.adminPin) {
-    ui.authed = true;
-    sessionStorage.setItem('thesis-authed', '1');
-    ui.pinErr = false;
-    editState = JSON.parse(JSON.stringify(state));
-    render();
-  } else {
-    ui.pinErr = true;
-    render();
-  }
-}
-
-function saveAdmin() {
-  if (!editState) return;
-
-  // Collect values from inputs
-  const titleEl  = document.getElementById('ae-title');
-  const authorEl = document.getElementById('ae-author');
-  const pinEl    = document.getElementById('ae-pin');
-
-  if (titleEl)  editState.thesisTitle = titleEl.value;
-  if (authorEl) editState.authorName  = authorEl.value;
-  if (pinEl && pinEl.value) editState.adminPin = pinEl.value;
-
-  editState.chapters.forEach(ch => {
-    const nm = document.getElementById(`ae-ch-name-${ch.id}`);
-    const tg = document.getElementById(`ae-ch-target-${ch.id}`);
-    const bs = document.getElementById(`ae-ch-base-${ch.id}`);
-    if (nm) ch.name   = nm.value;
-    if (tg) ch.target = Math.max(0, parseInt(tg.value) || 0);
-    if (bs) ch.base   = Math.max(0, parseInt(bs.value) || 0);
+function saveAdmin(){
+  if(!editState)return;
+  const v=id=>document.getElementById(id)?.value;
+  if(v('ae-title'))editState.thesisTitle=v('ae-title');
+  if(v('ae-author'))editState.authorName=v('ae-author');
+  if(v('ae-pin'))editState.adminPin=v('ae-pin');
+  editState.chapters.forEach(ch=>{
+    const nm=v(`ae-ch-name-${ch.id}`),tg=v(`ae-ch-target-${ch.id}`),bs=v(`ae-ch-base-${ch.id}`);
+    if(nm!==null)ch.name=nm;if(tg!==null)ch.target=Math.max(0,parseInt(tg)||0);if(bs!==null)ch.base=Math.max(0,parseInt(bs)||0);
   });
-
-  state = { ...editState };
-  persist();
-  ui.adminOpen = false;
-  editState = null;
-  render();
-  toast('✓ Settings saved');
-}
-
-function addChapter() {
-  if (!editState) return;
-  // Snapshot current input values so they survive re-render
-  editState.chapters.forEach(ch => {
-    const nm = document.getElementById(`ae-ch-name-${ch.id}`);
-    const tg = document.getElementById(`ae-ch-target-${ch.id}`);
-    const bs = document.getElementById(`ae-ch-base-${ch.id}`);
-    if (nm) ch.name   = nm.value;
-    if (tg) ch.target = Math.max(0, parseInt(tg.value) || 0);
-    if (bs) ch.base   = Math.max(0, parseInt(bs.value) || 0);
-  });
-  editState.chapters.push({ id: Date.now(), name: 'New Chapter', target: 5000, base: 0 });
-  render();
-}
-
-function removeChapter(id) {
-  if (!editState) return;
-  if (!confirm('Remove this chapter? Session data for it will also be deleted.')) return;
-  editState.chapters = editState.chapters.filter(c => c.id !== id);
-  state.sessions = (state.sessions || []).filter(s => s.chapterId !== id);
-  render();
-}
-
-function exportData() {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'thesis-tracker-backup.json';
-  a.click();
-}
-
-function clearSessions() {
-  if (!confirm('Delete all session history? Chapter word counts from sessions will be lost. Starting words are kept.')) return;
-  state.sessions = [];
-  persist();
-  render();
-  toast('Session history cleared');
-}
-
-// ─── Toast ────────────────────────────────────────────────────────────────
-function toast(msg) {
-  document.querySelectorAll('.toast').forEach(el => el.remove());
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2800);
-}
-
-// ─── Confetti ─────────────────────────────────────────────────────────────
-function fireConfetti() {
-  const colors = ['#C9922A','#8B1A2F','#E8C06A','#4A7C59','#2C4A8C','#E8A87C','#FFF0D0'];
-  const container = document.getElementById('cfx');
-  if (!container) return;
-  container.innerHTML = '';
-  for (let i = 0; i < 70; i++) {
-    const el  = document.createElement('div');
-    const sz  = 6 + Math.random() * 8;
-    el.className = 'cf';
-    Object.assign(el.style, {
-      left: `${Math.random() * 100}%`,
-      top: '-20px',
-      width: sz + 'px',
-      height: sz + 'px',
-      background: colors[Math.floor(Math.random() * colors.length)],
-      borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-      animationDuration: `${2.5 + Math.random() * 2}s`,
-      animationDelay: `${Math.random() * 2.5}s`,
-    });
-    container.appendChild(el);
+  const figEl=document.getElementById('ae-fig-target');
+  if(figEl){
+    const newTgt=Math.max(0,parseInt(figEl.value)||0);
+    const old=editState.figures||[];
+    old.forEach(f=>{const nm=v(`ae-fig-name-${f.id}`);if(nm!==null)f.name=nm;});
+    if(newTgt>old.length){for(let i=old.length+1;i<=newTgt;i++)old.push({id:Date.now()+i,num:i,name:'',done:false});}
+    else if(newTgt<old.length){const losing=old.slice(newTgt).filter(f=>f.done).length;if(losing>0&&!confirm(`This will remove ${losing} completed figure(s). Continue?`))return;old.splice(newTgt);}
+    old.forEach((f,i)=>{f.num=i+1;});
+    editState.figureTarget=newTgt;editState.figures=old;
   }
-  setTimeout(() => { if (container) container.innerHTML = ''; }, 6500);
+  state={...editState};persist();ui.adminOpen=false;editState=null;render();toast('✓ Settings saved');
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────
+function addChapter(){
+  if(!editState)return;
+  editState.chapters.forEach(ch=>{
+    const nm=document.getElementById(`ae-ch-name-${ch.id}`),tg=document.getElementById(`ae-ch-target-${ch.id}`),bs=document.getElementById(`ae-ch-base-${ch.id}`);
+    if(nm)ch.name=nm.value;if(tg)ch.target=Math.max(0,parseInt(tg.value)||0);if(bs)ch.base=Math.max(0,parseInt(bs.value)||0);
+  });
+  editState.chapters.push({id:Date.now(),name:'New Chapter',target:5000,base:0});render();
+}
+
+function removeChapter(id){
+  if(!editState)return;
+  if(!confirm('Remove this chapter? Its session data will also be deleted.'))return;
+  editState.chapters=editState.chapters.filter(c=>c.id!==id);
+  state.sessions=(state.sessions||[]).filter(s=>s.chapterId!==id);render();
+}
+
+function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='thesis-tracker-backup.json';a.click();}
+function clearSessions(){if(!confirm('Delete all session history? Starting words are kept.'))return;state.sessions=[];persist();render();toast('Session history cleared');}
+
+function toast(msg){document.querySelectorAll('.toast').forEach(e=>e.remove());const el=document.createElement('div');el.className='toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),2800);}
+
+function fireConfetti(){
+  const colors=['#C9922A','#8B1A2F','#E8C06A','#4A7C59','#2C4A8C','#E8A87C','#FFF0D0'];
+  const c=document.getElementById('cfx');if(!c)return;c.innerHTML='';
+  for(let i=0;i<70;i++){const el=document.createElement('div'),sz=6+Math.random()*8;el.className='cf';Object.assign(el.style,{left:`${Math.random()*100}%`,top:'-20px',width:sz+'px',height:sz+'px',background:colors[Math.floor(Math.random()*colors.length)],borderRadius:Math.random()>.5?'50%':'2px',animationDuration:`${2.5+Math.random()*2}s`,animationDelay:`${Math.random()*2.5}s`});c.appendChild(el);}
+  setTimeout(()=>{if(c)c.innerHTML='';},6500);
+}
+
 render();
 </script>
 </body>
