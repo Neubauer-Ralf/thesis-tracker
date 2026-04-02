@@ -138,7 +138,6 @@ input,select{font-family:inherit}
 .fl{display:block;font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .fi{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:.86rem;outline:none;transition:border-color .2s}
 .fi:focus{border-color:var(--gold)}
-.fi.mono{font-family:monospace;font-size:.78rem;letter-spacing:.02em}
 .sdiv{font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px;display:flex;align-items:center;gap:8px}
 .sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
 .sdivnote{font-size:.7rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
@@ -159,13 +158,6 @@ input,select{font-family:inherit}
 .fignameitem span{font-size:.68rem;color:var(--muted);min-width:36px}
 .fignameitem input{flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:.8rem;outline:none}
 .fignameitem input:focus{border-color:var(--gold)}
-
-.cloud-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 12px;border-radius:8px;font-size:.78rem}
-.cloud-row.ok{background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);color:var(--green)}
-.cloud-row.none{background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
-.syncbtn{flex:none;padding:5px 12px;border-radius:6px;border:1px solid currentColor;background:none;font-size:.72rem;font-weight:500;color:inherit;transition:opacity .2s}
-.syncbtn:hover{opacity:.7}
-
 .savebtn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#A0223A);color:white;border:none;border-radius:8px;font-size:.9rem;font-weight:500;transition:all .2s;letter-spacing:.04em}
 .savebtn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(139,26,47,.26)}
 .dbtn{width:100%;padding:9px;background:none;border:1px solid rgba(139,26,47,.28);color:var(--accent);border-radius:8px;font-size:.8rem;margin-top:8px;transition:all .2s}
@@ -204,13 +196,9 @@ input,select{font-family:inherit}
 <script>
 'use strict';
 
-// ─── Hardcoded public credentials (read-only, safe to ship in code) ────────
-const READONLY_KEY = '$2a$10$dwlRq2d7m8YUCxXqKiOsouXQUN3yhZWpklu5Ha/XFC532/dfu1SoS';
-const BIN_ID       = '69cda72536566621a86edfc0';
-
-// ─── Master key (write access, stored in localStorage only, never in code) ─
-const MASTER_SK = 'thesis-tracker-masterkey';
-const SK        = 'thesis-tracker-v2';
+const MASTER_KEY = '$2a$10$mdPv5iZ/O4CHc0NCvowOnOwpzwpmj8WJfqhIx5G/bGfDdhWLxtBi2';
+const BIN_ID     = '69cda72536566621a86edfc0';
+const SK         = 'thesis-tracker-v2';
 
 const MILESTONES = [
   {pct:10,e:'🌱',l:'First words'},{pct:25,e:'✍️',l:'Quarter done'},
@@ -231,9 +219,7 @@ const DEFAULT = {
   sessions:[],figureTarget:0,figures:[],lastUpdated:null,
 };
 
-let masterKey = localStorage.getItem(MASTER_SK) || '';
 let syncState = 'syncing';
-
 let state = migrate((() => {
   try { const s = localStorage.getItem(SK); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT)); }
   catch { return JSON.parse(JSON.stringify(DEFAULT)); }
@@ -248,38 +234,30 @@ function migrate(s) {
   return s;
 }
 
-// ─── JSONBin ──────────────────────────────────────────────────────────────
 async function jbRead() {
   try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-      headers: {'X-Master-Key': READONLY_KEY}
-    });
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers:{'X-Master-Key':MASTER_KEY} });
     if (!r.ok) return null;
     return (await r.json()).record || null;
   } catch { return null; }
 }
 
 async function jbWrite(data) {
-  if (!masterKey) return false;
   try {
     const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json','X-Master-Key': masterKey},
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':MASTER_KEY},
       body: JSON.stringify(data),
     });
     return r.ok;
   } catch { return false; }
 }
 
-// ─── Persist ──────────────────────────────────────────────────────────────
-function persistLocal() {
-  try { localStorage.setItem(SK, JSON.stringify(state)); } catch {}
-}
+function persistLocal() { try { localStorage.setItem(SK, JSON.stringify(state)); } catch {} }
 
 function persistRemote() {
-  if (!masterKey) return;
-  syncState = 'syncing'; updateSyncBadge();
-  jbWrite(state).then(ok => { syncState = ok ? 'cloud' : 'error'; updateSyncBadge(); });
+  syncState='syncing'; updateSyncBadge();
+  jbWrite(state).then(ok => { syncState=ok?'cloud':'error'; updateSyncBadge(); });
 }
 
 function persist() { persistLocal(); persistRemote(); }
@@ -287,24 +265,17 @@ function persist() { persistLocal(); persistRemote(); }
 function updateSyncBadge() {
   const el = document.getElementById('sync-badge');
   if (!el) return;
-  const map = {
-    cloud:   {cls:'cloud',   txt:'☁ Live'},
-    local:   {cls:'local',   txt:'○ Offline'},
-    syncing: {cls:'syncing', txt:'↻ Syncing…'},
-    error:   {cls:'error',   txt:'⚠ Sync failed'},
-  };
-  const {cls,txt} = map[syncState] || map.local;
-  el.className = `sync-status ${cls}`; el.textContent = txt;
+  const map = { cloud:{cls:'cloud',txt:'☁ Live'}, local:{cls:'local',txt:'○ Offline'}, syncing:{cls:'syncing',txt:'↻ Syncing…'}, error:{cls:'error',txt:'⚠ Sync failed'} };
+  const {cls,txt} = map[syncState]||map.local;
+  el.className=`sync-status ${cls}`; el.textContent=txt;
 }
 
-// ─── Dates ────────────────────────────────────────────────────────────────
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function daysAgoStr(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
 function fmtDateLong(s){return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});}
 function fmtDateShort(s){if(s===todayStr())return'Today';if(s===daysAgoStr(1))return'Yesterday';return new Date(s+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
 function fmtProjected(d){const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`;}
 
-// ─── Computed ─────────────────────────────────────────────────────────────
 function chCurrent(ch){return(ch.base||0)+(state.sessions||[]).filter(s=>s.chapterId===ch.id).reduce((s,x)=>s+x.words,0);}
 function totals(){const cur=state.chapters.reduce((s,c)=>s+chCurrent(c),0),tgt=state.chapters.reduce((s,c)=>s+(c.target||0),0);return{current:cur,target:tgt,pct:tgt>0?Math.min(100,Math.round(cur/tgt*100)):0};}
 function figTotals(){const total=state.figureTarget||0,done=(state.figures||[]).filter(f=>f.done).length;return{total,done,pct:total>0?Math.round(done/total*100):0};}
@@ -324,7 +295,6 @@ function motivMsg(pct){const m=[[100,"It is done. Every word hard-won. Every pag
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmt(n){return(n||0).toLocaleString('en-GB');}
 
-// ─── Render ───────────────────────────────────────────────────────────────
 function renderHeader(){
   const map={cloud:'cloud',local:'local',syncing:'syncing',error:'error'};
   const txt={cloud:'☁ Live',local:'○ Offline',syncing:'↻ Syncing…',error:'⚠ Sync failed'};
@@ -361,30 +331,17 @@ function renderSessions(){
 
 function renderAdminPanel(){
   const ch=editState.chapters||[],ft=editState.figureTarget||0,figs=editState.figures||[];
-  const hasKey = !!masterKey;
-  const cloudRow = hasKey
-    ? `<div class="cloud-row ok">☁ Write access active<button class="syncbtn" style="margin-left:auto" onclick="manualSync()">Pull latest</button></div>`
-    : `<div class="cloud-row none">Enter master key to enable writing</div>`;
-
   return`<div class="phd"><div class="ptitle serif">Settings</div><button class="xbtn" onclick="closeAdmin()">✕</button></div>
   <div class="fg"><label class="fl">Author Name</label><input id="ae-author" class="fi" value="${esc(editState.authorName)}"></div>
   <div class="fg"><label class="fl">Thesis Title</label><input id="ae-title" class="fi" value="${esc(editState.thesisTitle)}"></div>
   <div class="fg"><label class="fl">Admin PIN</label><input id="ae-pin" class="fi" type="password" placeholder="Change PIN (leave blank to keep)"></div>
-
-  <div class="sdiv">Cloud Sync</div>
-  ${cloudRow}
-  <p class="sdivnote">The master key allows writing to the database. Only enter it on your own devices.</p>
-  <div class="fg"><label class="fl">Master Key</label><input id="ae-masterkey" class="fi mono" type="password" placeholder="${hasKey?'set — paste to change':'Paste JSONBin Master Key'}"></div>
-
   <div class="sdiv">Chapters</div>
   <p class="sdivnote">"Starting words" = words written before tracking began.</p>
   ${ch.map(c=>`<div class="charow"><div class="charow-top"><input id="ae-ch-name-${c.id}" class="cnin" value="${esc(c.name)}"><button class="rmbtn" onclick="removeChapter(${c.id})">✕</button></div><div class="cnums"><div><label>Word target</label><input id="ae-ch-target-${c.id}" class="nin" type="number" value="${c.target}"></div><div><label>Starting words</label><input id="ae-ch-base-${c.id}" class="nin" type="number" value="${c.base||0}"></div></div></div>`).join('')}
   <button class="addchbtn" onclick="addChapter()">+ Add Chapter</button>
-
   <div class="sdiv">Figures</div>
   <div class="fg"><label class="fl">Total figures needed</label><input id="ae-fig-target" class="fi" type="number" min="0" value="${ft}" placeholder="0"></div>
   ${figs.length>0?`<p class="sdivnote">Optionally label each figure.</p><div class="fignamerow">${figs.map(f=>`<div class="fignameitem"><span>Fig. ${f.num}</span><input id="ae-fig-name-${f.id}" value="${esc(f.name||'')}" placeholder="Label (optional)"></div>`).join('')}</div>`:''}
-
   <div style="margin-top:20px"></div>
   <button class="savebtn" onclick="saveAdmin()">Save Changes</button>
   <div class="sdiv">Data</div>
@@ -402,7 +359,6 @@ function render(){
   if(ui.adminOpen&&!ui.authed)setTimeout(()=>document.getElementById('pin-in')?.focus(),60);
 }
 
-// ─── Actions ──────────────────────────────────────────────────────────────
 function doLog(){
   const words=parseInt(ui.logWords);if(!words||words<=0){toast('Enter a valid word count');return;}
   const chId=parseInt(ui.logChapterId);if(!chId){toast('Select a chapter');return;}
@@ -445,18 +401,12 @@ async function saveAdmin(){
     else if(newTgt<old.length){const losing=old.slice(newTgt).filter(f=>f.done).length;if(losing>0&&!confirm(`This will remove ${losing} completed figure(s). Continue?`))return;old.splice(newTgt);}
     old.forEach((f,i)=>{f.num=i+1;});editState.figureTarget=newTgt;editState.figures=old;
   }
-  const newKey=(v('ae-masterkey')||'').trim();
-  if(newKey){masterKey=newKey;localStorage.setItem(MASTER_SK,masterKey);}
   state={...editState};persistLocal();
   ui.adminOpen=false;editState=null;render();
-  if(masterKey){
-    syncState='syncing';updateSyncBadge();
-    const ok=await jbWrite(state);
-    syncState=ok?'cloud':'error';updateSyncBadge();
-    toast(ok?'☁ Synced to cloud':'⚠ Sync failed — check master key');
-  } else {
-    toast('✓ Settings saved (local only)');
-  }
+  syncState='syncing';updateSyncBadge();
+  const ok=await jbWrite(state);
+  syncState=ok?'cloud':'error';updateSyncBadge();
+  toast(ok?'☁ Saved and synced':'⚠ Save failed — check connection');
 }
 
 function addChapter(){
@@ -466,13 +416,6 @@ function addChapter(){
 }
 
 function removeChapter(id){if(!editState)return;if(!confirm('Remove this chapter?'))return;editState.chapters=editState.chapters.filter(c=>c.id!==id);state.sessions=(state.sessions||[]).filter(s=>s.chapterId!==id);render();}
-
-async function manualSync(){
-  toast('↻ Pulling from cloud…');
-  const remote=await jbRead();
-  if(remote){state=migrate(remote);persistLocal();syncState='cloud';render();toast('☁ Pulled latest from cloud');}
-  else{syncState='error';updateSyncBadge();toast('⚠ Could not reach cloud');}
-}
 
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='thesis-tracker-backup.json';a.click();}
 function clearSessions(){if(!confirm('Delete all session history?'))return;state.sessions=[];persist();render();toast('Session history cleared');}
@@ -486,11 +429,10 @@ function fireConfetti(){
   setTimeout(()=>{if(c)c.innerHTML='';},6500);
 }
 
-// ─── Init: always read from cloud on load ─────────────────────────────────
 async function init(){
   const remote = await jbRead();
   if(remote){state=migrate(remote);persistLocal();syncState='cloud';}
-  else{syncState=masterKey?'error':'local';}
+  else syncState='error';
   render();
 }
 
